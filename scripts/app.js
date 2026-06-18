@@ -55,7 +55,7 @@
   ═══════════════════════════════════════════════════════════════ */
   var COUPONS = [
     { id: 'SUMMER26',  name: 'Alumni Summer Package',    appliesTo: 'All Products',           expires: 'Jun 1, 2026',  status: 'active',   used: 0,   total: 25  },
-    { id: 'SPRING26',  name: 'Alumni Spring Package',    appliesTo: 'All Products',           expires: 'May 15, 2026', status: 'active',   used: 6,   total: 25  },
+    { id: 'SPRING26',  name: 'Alumni Spring Package',    appliesTo: 'All Products',           expires: 'May 15, 2026', status: 'active',   used: 0,   total: 25  },
     { id: 'REUNION21', name: 'Alumni Reunion',           appliesTo: 'Transcripts',            expires: 'Jan 20, 2026', status: 'redeemed', used: 6,   total: 25  },
     { id: 'FALLWVR',   name: 'Fall Session Bulk Waiver', appliesTo: 'All Products',           expires: 'Aug 20, 2025', status: 'expired',  used: 123, total: 123 },
     { id: 'CDISC25',   name: 'Counselor Discretionary',  appliesTo: 'Transcripts, Diplomas',  expires: 'Jul 13, 2025', status: 'revoked',  used: 20,  total: 25  }
@@ -72,6 +72,7 @@
   ];
 
   var activeFilters   = new Set(['active', 'redeemed', 'expired', 'revoked']);
+  var currentPhase   = 2;
   var revokeTarget   = null;
   var sendList       = [];
   var librarySelected = new Set();
@@ -165,12 +166,7 @@
             '</div>' +
           '</td>' +
           '<td class="tasty-table__td actions-cell">' +
-            '<div class="row-actions-wrap">' +
-              '<button class="tasty-btn is-ghost is-sm manage-btn" ' +
-                'onclick="openManageMenu(event,\'' + c.id + '\')">' +
-                'Manage' +
-              '</button>' +
-            '</div>' +
+            renderActionCell(c) +
           '</td>' +
         '</tr>';
       }).join('');
@@ -184,6 +180,51 @@
   };
 
   window.sortTable = function () { /* prototype stub */ };
+
+  /* Phase toggle (dev panel) */
+  window.setPhase = function (phase, btn) {
+    currentPhase = parseInt(phase, 10);
+    document.querySelectorAll('.dev-btn[data-phase]').forEach(function (b) {
+      b.classList.toggle('active', b.dataset.phase == phase);
+    });
+    var search = document.getElementById('search-input');
+    renderTable(search ? search.value : '');
+  };
+
+  /* Render the actions cell depending on current phase */
+  function renderActionCell(c) {
+    if (currentPhase === 1) {
+      if (c.status === 'active' || c.status === 'redeemed') {
+        return '<div class="row-actions-wrap p1-actions">' +
+          '<button class="tasty-btn is-ghost is-sm p1-action-btn" title="Manage distribution" ' +
+            'aria-label="Manage distribution for ' + escapeHtml(c.name) + '">' +
+            tastyIcon('send', { size: 14 }) +
+          '</button>' +
+          '<button class="tasty-btn is-ghost is-sm p1-action-btn" title="Edit usage limits" ' +
+            'aria-label="Edit usage limits for ' + escapeHtml(c.name) + '">' +
+            tastyIcon('edit', { size: 14 }) +
+          '</button>' +
+          '<button class="tasty-btn is-ghost is-sm p1-action-btn p1-expire-btn" title="Expire code" ' +
+            'aria-label="Expire ' + escapeHtml(c.name) + '">' +
+            tastyIcon('cancel', { size: 14 }) +
+          '</button>' +
+        '</div>';
+      } else {
+        return '<div class="row-actions-wrap p1-actions">' +
+          '<button class="tasty-btn is-ghost is-sm p1-action-btn" title="Reactivate" ' +
+            'aria-label="Reactivate ' + escapeHtml(c.name) + '">' +
+            tastyIcon('refresh', { size: 14 }) +
+          '</button>' +
+        '</div>';
+      }
+    }
+    return '<div class="row-actions-wrap">' +
+      '<button class="tasty-btn is-ghost is-sm manage-btn" ' +
+        'onclick="openManageMenu(event,\'' + c.id + '\')">' +
+        'Manage' +
+      '</button>' +
+    '</div>';
+  }
 
 
   /* ═══════════════════════════════════════════════════════════════
@@ -279,13 +320,16 @@
   ═══════════════════════════════════════════════════════════════ */
   window.toggleKebab = function () {
     var m = document.getElementById('kebab-menu');
+    var btn = document.getElementById('kebab-btn');
     if (!m) return;
     var isOpen = m.style.display !== 'none';
     m.style.display = isOpen ? 'none' : 'block';
+    if (btn) btn.setAttribute('aria-expanded', isOpen ? 'false' : 'true');
     if (!isOpen) {
       setTimeout(function () {
         document.addEventListener('click', function handler() {
           m.style.display = 'none';
+          if (btn) btn.setAttribute('aria-expanded', 'false');
           document.removeEventListener('click', handler);
         });
       }, 0);
@@ -613,10 +657,10 @@
      INIT
   ═══════════════════════════════════════════════════════════════ */
   document.addEventListener('DOMContentLoaded', function () {
-    /* Header illustration */
+    /* Header illustration — 7u coupon icon, size large (SectionHeaderTitle) */
     var headerSlot = document.getElementById('coupon-illus-header');
-    if (headerSlot && typeof tastyIllus === 'function') {
-      headerSlot.innerHTML = tastyIllus('piggy-bank-fill', { size: 64, alt: 'Coupon Codes' });
+    if (headerSlot) {
+      headerSlot.innerHTML = '<img src="assets/7u-coupon-fill.svg" width="80" height="80" alt="" aria-hidden="true">';
     }
 
     /* Empty state illustration */
