@@ -1,0 +1,373 @@
+/* ════════════════════════════════════════════════════════════════════
+   PARCHMENT CHROME — Page header / nav / footer / workflow header
+   Source of truth: Tasty Organisms — PageHeader (5:123) + PageFooter (35:0)
+   Verified June 2026 via Figma MCP.
+
+   Theme-aware via [data-theme] on <html>. Colors resolve through tokens.
+   ════════════════════════════════════════════════════════════════════ */
+
+/* ─── Page shell ─── */
+.screen { display: none; min-height: 100vh; }
+.screen.active { display: block; }
+
+.dashboard-screen-wrap,
+.queue-screen-wrap {
+  min-height: 100vh;
+  background: var(--c-surface);
+  display: flex;
+  flex-direction: column;
+}
+
+.app-wrap {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+
+/* ════════════════════════════════════════════════════════════════════
+   PAGE HEADER — Tasty Organisms · PageHeader (3935:80278)
+   ════════════════════════════════════════════════════════════════════
+   80px tall bar, bg --c-page-header (brand0 / veniceBlue in default).
+   Padding: space-sm (8px) vertical, space-jumbo (50px) horizontal.
+   ════════════════════════════════════════════════════════════════════ */
+.parch-header {
+  background: var(--c-page-header);
+  color: var(--c-page-header-fg);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 80px;
+  padding: 8px max(50px, calc((100% - 1600px) / 2));
+  flex-shrink: 0;
+}
+
+/* ─── Brand (left) ─── */
+.parch-header__brand {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.parch-header__logo {
+  display: block;
+  width: 166px;
+  height: 30px;
+  object-fit: contain;
+  object-position: left center;
+}
+
+/* Light + White themes invert the white logo so it reads dark on the
+   light header. Dark + Contrast leave the white logo as-is on dark chrome. */
+[data-theme="light"] .parch-header__logo,
+[data-theme="light"] .parch-footer__logo,
+[data-theme="white"] .parch-header__logo,
+[data-theme="white"] .parch-footer__logo {
+  filter: invert(1) brightness(0.2);
+}
+
+/* ─── Right cluster ─── */
+.parch-header__right {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  flex-shrink: 0;
+}
+
+/* ─── Language Selector ─── (Tasty Atoms · LanguageSelector) */
+.parch-header__lang {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  color: var(--c-page-header-fg);
+  background: transparent;
+  border: none;
+  font-family: var(--font-family);
+  transition: background var(--t-quick);
+}
+/* Source (Header/LanguageSelection.tsx): hover/focus = action.hover.primary
+   gradient + white text — same treatment in every theme. */
+.parch-header__lang:hover,
+.parch-header__lang:focus-visible {
+  background: var(--c-hover-primary);
+  color: var(--white);
+}
+
+.parch-header__lang-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+}
+.parch-header__lang-icon i { font-size: 26px; }
+
+.parch-header__lang-label {
+  font-size: 16px;
+  font-weight: 700;          /* Bold */
+  text-transform: uppercase; /* "EN" */
+  letter-spacing: 0.02em;
+  color: inherit;
+}
+
+/* ─── Persona Menu ─── (Tasty Organisms · PersonaMenu)
+   Inner pill that sits inside the header bar. Brighter blue than the
+   header background, with a 1px cyan border. */
+.parch-header__persona {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 350px;
+  height: 60px;
+  padding: 8px 16px;
+  border-radius: 5px;
+  background: var(--c-persona-bg);
+  border: 1px solid var(--c-persona-border);
+  color: var(--c-persona-fg);
+  cursor: pointer;
+  font-family: var(--font-family);
+  transition: background var(--t-quick), border-color var(--t-quick);
+}
+/* Source (PersonaMenuHeader.tsx): hover/focus = action.hover.primary gradient,
+   border → theme.border, all text + caret → literal white (every theme). */
+.parch-header__persona:hover,
+.parch-header__persona:focus-visible {
+  background: var(--c-persona-bg-hover);
+  border-color: var(--c-border);
+  color: var(--white);
+}
+.parch-header__persona:hover .parch-header__persona-hello,
+.parch-header__persona:hover .parch-header__persona-name,
+.parch-header__persona:hover .parch-header__persona-org,
+.parch-header__persona:focus-visible .parch-header__persona-hello,
+.parch-header__persona:focus-visible .parch-header__persona-name,
+.parch-header__persona:focus-visible .parch-header__persona-org {
+  color: var(--white);
+}
+
+/* PersonaDetail: square logo tile + text */
+.parch-header__persona-detail {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex: 1;
+  min-width: 0;
+}
+
+/* ImageMemberLogo (xs, 40px) — Tasty Molecules I */
+.parch-header__org-logo {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  overflow: hidden;
+}
+.parch-header__org-logo img {
+  max-width: 100%;
+  max-height: 100%;
+  display: block;
+}
+.parch-header__org-logo--initials {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--c-text);
+  letter-spacing: 0.02em;
+}
+
+.parch-header__persona-text {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  line-height: 16px;
+  font-size: 13px;
+  color: var(--c-persona-fg);
+}
+.parch-header__persona-hello {
+  font-weight: 400;
+  color: var(--c-persona-fg);
+}
+.parch-header__persona-name {
+  font-weight: 700;
+  color: var(--c-persona-name-fg);
+}
+.parch-header__persona-org {
+  font-weight: 400;
+  color: var(--c-persona-fg);
+}
+
+.parch-header__persona-caret {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 13px;
+  height: 13px;
+  flex-shrink: 0;
+  color: inherit;
+}
+.parch-header__persona-caret i { font-size: 13px; }
+
+
+/* ════════════════════════════════════════════════════════════════════
+   NAV TABS — Tasty Molecules II · NavTabSet
+   16px Bold, $action-default inactive, $action-strong + 4px underline.
+   White bar in both themes.
+   ════════════════════════════════════════════════════════════════════ */
+.parch-nav {
+  background: var(--c-nav-bar);
+  border-bottom: 1px solid var(--c-nav-bar-border);
+  padding: 0 max(50px, calc((100% - 1600px) / 2));
+  display: flex;
+  gap: 40px;
+  flex-shrink: 0;
+}
+
+.nav-tab {
+  padding: 12px 0 8px;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--c-nav-inactive);
+  cursor: pointer;
+  border-bottom: 4px solid transparent;
+  transition: color var(--t-quick), border-color var(--t-quick);
+  white-space: nowrap;
+  user-select: none;
+  background: none;
+  border-left: none;
+  border-right: none;
+  border-top: none;
+  font-family: var(--font-family);
+}
+.nav-tab:hover  { color: var(--c-nav-active); }
+.nav-tab.active { color: var(--c-nav-active); border-bottom-color: var(--c-nav-active); }
+.nav-tab:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
+
+
+/* ════════════════════════════════════════════════════════════════════
+   WORKFLOW HEADER — Tasty micro-frontend architecture
+   Replaces nav inside a workflow. 50px white bar.
+   ════════════════════════════════════════════════════════════════════ */
+.workflow-header {
+  background: var(--c-surface);
+  border-bottom: 1px solid var(--c-border);
+  height: 50px;
+  display: flex;
+  align-items: center;
+  padding: 8px max(8px, calc((100% - 1600px) / 2));
+  gap: 8px;
+  flex-shrink: 0;
+}
+.workflow-header-left  { flex: 1; min-width: 0; display: flex; align-items: center; justify-content: flex-start; }
+.workflow-header-right { flex: 1; min-width: 0; display: flex; align-items: center; justify-content: flex-end; }
+
+.workflow-nav-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  height: 30px;
+  background: none;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-family);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--c-brand);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: background var(--t-quick);
+}
+.workflow-nav-btn:hover { background: var(--c-brand-bg); }
+.workflow-nav-btn:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
+.workflow-nav-btn i { font-size: 12px; }
+
+
+/* ════════════════════════════════════════════════════════════════════
+   PAGE FOOTER — Tasty Organisms · PageFooter (35:333)
+   ════════════════════════════════════════════════════════════════════
+   Layout (top to bottom):
+     1. 9px ambient gradient strip (fades up from page content)
+     2. 1px border line
+     3. 60px main bar — bg --c-page-footer (brand0 / veniceBlue default)
+
+   Total: 70px tall.
+   Main bar: 3-column flex (links | logo | links).
+   Padding: space-sm (8px) vertical, space-jumbo (50px) horizontal.
+   ════════════════════════════════════════════════════════════════════ */
+.parch-footer {
+  background: var(--c-page-footer);
+  color: var(--c-page-footer-fg);
+  display: flex;
+  align-items: center;
+  height: 60px;
+  padding: 8px max(50px, calc((100% - 1600px) / 2));
+  flex-shrink: 0;
+}
+
+.parch-footer__links-left,
+.parch-footer__links-right {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  gap: 32px;
+  align-items: center;
+}
+.parch-footer__links-left  { justify-content: flex-start; }
+.parch-footer__links-right { justify-content: flex-end; }
+
+.parch-footer__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--c-page-footer-fg);
+  text-decoration: none;
+  text-transform: capitalize;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: opacity var(--t-quick);
+}
+.parch-footer__link i { font-size: 13px; }
+.parch-footer__link:hover { opacity: 0.85; }
+
+.parch-footer__logo {
+  display: block;
+  height: 20px;
+  width: 110px;
+  flex-shrink: 0;
+  object-fit: contain;
+}
+
+
+/* ════════════════════════════════════════════════════════════════════
+   PAGE CONTENT CONTAINER
+   ════════════════════════════════════════════════════════════════════ */
+.page-content {
+  flex: 1;
+  width: 100%;
+  padding: 48px max(50px, calc((100% - 1600px) / 2)) 60px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.page-title-row {
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;
+}
+.page-title {
+  font-size: 22px; font-weight: 700; letter-spacing: -0.02em;
+  margin: 0 0 4px;
+  color: var(--c-text-strong);
+}
+.page-subtitle { font-size: 13px; color: var(--c-text-muted); margin: 0; }
+.page-title-actions { display: flex; gap: 8px; flex-shrink: 0; padding-top: 4px; }

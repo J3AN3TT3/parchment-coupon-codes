@@ -1,0 +1,838 @@
+/* ════════════════════════════════════════════════════════════════════
+   APPSHELL — starter layout only.
+   Chrome (header/nav/footer/.screen) lives in chrome.css. Components live
+   in tasty-components.css. This file is just page scaffolding + dev panel.
+   Replace the demo screen with your prototype; keep the chrome + tokens.
+   ════════════════════════════════════════════════════════════════════ */
+
+body { margin: 0; font-family: var(--font-family-base); color: var(--c-text); background: var(--c-page); }
+* { box-sizing: border-box; }
+
+.page-content {
+  /* Align body content exactly with the chrome (header/nav/footer): same 1600px
+     content cap + ≥50px gutters. Must match the formula in chrome.css. */
+  padding: var(--space-xl) max(var(--space-jumbo), calc((100% - 1600px) / 2));
+}
+
+.section-card {
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  margin-bottom: var(--space-lg);
+  box-shadow: var(--shadow-card);
+}
+.section-card h2 { margin: 0 0 var(--space-md); font-size: var(--font-large); color: var(--c-text-strong); }
+.section-card h3 { margin: var(--space-lg) 0 var(--space-sm); font-size: var(--font-medium); color: var(--c-text-muted); font-weight: var(--font-weight-semibold); }
+.demo-row { display: flex; flex-wrap: wrap; gap: var(--space-md); align-items: center; }
+
+/* ─── Dev panel (theme switcher) — copied pattern from the counselor proto ─── */
+#dev-panel {
+  position: fixed; right: var(--space-md); bottom: var(--space-md); z-index: 9999;
+  background: var(--c-surface); border: 1px solid var(--c-border);
+  border-radius: var(--radius-lg); box-shadow: var(--shadow-pop);
+  padding: var(--space-md); min-width: 200px; font-size: var(--font-small);
+}
+.dev-section-label { margin: 0 0 var(--space-xs); font-weight: var(--font-weight-bold); color: var(--c-text-muted); text-transform: uppercase; letter-spacing: .04em; font-size: 11px; }
+.dev-btn-row { display: flex; flex-wrap: wrap; gap: var(--space-xs); }
+.dev-btn {
+  border: 1px solid var(--c-border); background: var(--c-surface);
+  color: var(--c-text); border-radius: var(--radius-md);
+  padding: 4px 10px; cursor: pointer; font: inherit;
+}
+.dev-btn.active { background: var(--c-brand); color: #fff; border-color: var(--c-brand); }
+
+/* ─── Toast (merged from parchment-app-shell) — centered top ─── */
+.toast-stack {
+  position: fixed; top: 24px; left: 50%; transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  z-index: 9500; pointer-events: none;
+}
+.toast-stack > .toast { pointer-events: auto; }
+.toast {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 14px; border: 1px solid; border-radius: var(--radius-md);
+  font-family: var(--font-family); font-size: 13px; font-weight: 600; line-height: 1.2;
+  box-shadow: var(--shadow-pop); max-width: 420px;
+  animation: toast-in 250ms ease-out;
+}
+.toast i { font-size: 14px; flex-shrink: 0; }
+.toast .toast-msg { flex: 1; min-width: 0; }
+.toast .toast-x {
+  cursor: pointer; background: none; border: 0; color: currentColor;
+  opacity: 0.85; padding: 0; margin-left: 6px; width: 18px; height: 18px;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.toast .toast-x:hover { opacity: 1; }
+.toast.fading { animation: toast-out 220ms ease-out forwards; }
+.toast.config  { background: var(--status-base-1);         border-color: var(--deepCerulean); color: var(--deepCerulean); }
+.toast.success { background: var(--status-base-2);         border-color: var(--basil);        color: var(--basil); }
+.toast.warning { background: var(--status-base-4);         border-color: var(--sahara);       color: var(--sahara); }
+.toast.urgent  { background: var(--seashell);              border-color: var(--cider);        color: var(--cider); }
+.toast.error   { background: var(--validation-base-error); border-color: var(--cherry);       color: var(--cherry); }
+.toast.bold    { background: var(--emperor);               border-color: var(--emperor);      color: var(--white); }
+@keyframes toast-in  { from { opacity: 0; transform: translateY(-12px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes toast-out { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(-12px); } }
+
+
+/* ═══════════════════════════════════════════════════════════════
+   COUPON CODES PROTOTYPE — custom styles
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Skip link (WCAG 2.4.1) ──────────────────────────────────── */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: var(--space-sm);
+  z-index: 10000;
+  background: var(--c-brand);
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+  font-weight: 700;
+  font-size: 14px;
+  text-decoration: none;
+}
+.skip-link:focus { top: 0; }
+
+/* ── Focus rings (WCAG 2.4.7) ─────────────────────────────── */
+:focus-visible {
+  outline: 3px solid var(--action-default);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+.tasty-input:focus { outline-offset: 0 !important; }
+.tasty-textarea:focus { outline-offset: 0 !important; }
+
+/* ── Sub-nav back bar (BACK TO SETTINGS) ──────────────────────── */
+.subnav-bar {
+  background: var(--c-surface);
+  border-bottom: 1px solid var(--c-border);
+  height: 44px;
+  display: flex;
+  align-items: center;
+  padding: 0 max(var(--space-jumbo), calc((100% - 1600px) / 2));
+}
+.subnav-back {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--action-default);
+  gap: 4px;
+}
+.subnav-back .tcon { color: var(--action-default); }
+
+
+/* ── Coupon control bar ───────────────────────────────────────── */
+.coupon-ctrl-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-md);
+}
+.coupon-ctrl-bar__left {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+.coupon-ctrl-bar__right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+.coupon-illus-wrap {
+  width: 68px;
+  height: 68px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.coupon-illus-wrap img { max-width: 100%; max-height: 100%; }
+.coupon-page-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--body-font-strong);
+  margin: 0;
+}
+.kebab-btn {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+/* ── Coupon table ─────────────────────────────────────────────── */
+.coupon-table {
+  margin-top: var(--space-sm);
+}
+.coupon-table .expires-cell {
+  font-size: 13px;
+  letter-spacing: .02em;
+}
+.usage-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 140px;
+}
+.usage-count {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--body-font-base);
+  letter-spacing: .04em;
+  text-align: center;
+}
+.tasty-progress {
+  height: 10px;
+}
+.actions-cell {
+  text-align: right;
+}
+.row-actions-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  position: relative;
+}
+.manage-btn {
+  white-space: nowrap;
+}
+.manage-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 4px);
+  z-index: 60;
+  min-width: 160px;
+}
+.tasty-table .tasty-table__th.sortable { cursor: pointer; }
+.tasty-table .tasty-table__th.sortable:hover { color: var(--action-default); }
+
+
+/* ── Empty state ──────────────────────────────────────────────── */
+.coupon-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-md);
+  padding: var(--space-xxl) 0;
+  text-align: center;
+}
+.coupon-empty-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--body-font-strong);
+  margin: 0;
+}
+.coupon-empty-illus img { opacity: .9; }
+
+
+/* ── Pagination ───────────────────────────────────────────────── */
+.coupon-pagination-wrap {
+  text-align: center;
+  margin-top: var(--space-lg);
+}
+.pagination-showing {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  color: var(--body-font-weak);
+  margin: 0 0 var(--space-xs);
+  text-transform: uppercase;
+}
+.pagination-per-page {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  color: var(--body-font-weak);
+  margin: var(--space-xs) 0 0;
+  text-transform: uppercase;
+}
+.per-page-trigger {
+  color: var(--action-default);
+  cursor: pointer;
+}
+.per-page-options {
+  display: inline-flex;
+  gap: 4px;
+  margin-left: 6px;
+}
+.per-page-options button {
+  border: 1px solid var(--border-color);
+  background: var(--white-space-base);
+  color: var(--action-default);
+  padding: 2px 8px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+}
+.per-page-options button:hover { background: var(--action-default); color: #fff; }
+.next-icon { display: inline-block; }
+
+
+/* ── Create form container ────────────────────────────────────── */
+/* app.css loads before tasty-components.css in this prototype, so body padding
+   overrides need !important to beat the __body rule in tasty-components.css */
+.tasty-input-container {
+  margin: 0 auto;
+}
+.create-form-body {
+  padding: 32px 48px !important;
+}
+/* Form footer: column layout, 600px button zone centered */
+.create-form-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-lg) var(--space-xl);
+}
+/* Button row inside any form footer — 600px wide, equal columns */
+.form-footer-btns {
+  display: flex;
+  gap: var(--space-sm);
+  width: 100%;
+  max-width: 600px;
+}
+.form-footer-btns .tasty-btn {
+  flex: 1;
+  justify-content: center;
+}
+.req-note {
+  font-size: 13px;
+  color: var(--body-font-weak);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.req { color: var(--thunderBird); font-weight: 700; }
+.optional-label { font-weight: 400; color: var(--body-font-weak); }
+
+
+/* ── Radio groups (applies-to, usage limits) ──────────────────── */
+.date-icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--action-default);
+  pointer-events: none;
+  display: inline-flex;
+}
+.product-select-lock {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--body-font-weak);
+  pointer-events: none;
+  display: inline-flex;
+}
+.product-select { padding-left: 36px; color: var(--body-font-weak); }
+
+
+/* ── Usage limits section ─────────────────────────────────────── */
+.usage-limits-section {
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid var(--c-border);
+}
+.usage-limits-heading {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--body-font-strong);
+  margin: 0 0 var(--space-md);
+}
+.usage-row { margin-top: var(--space-sm); }
+.usage-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+  margin-top: var(--space-xs);
+}
+.usage-input-group {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+.usage-number {
+  width: 100px;
+  text-align: center;
+}
+.usage-label { color: var(--body-font-base); font-weight: 500; }
+
+
+/* ── Send form ────────────────────────────────────────────────── */
+.send-form-body { padding: 32px 40px !important; }
+.send-intro {
+  text-align: center;
+  color: var(--body-font-weak);
+  margin: 0 0 var(--space-lg);
+}
+
+/* 3-option send method row */
+.send-options-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: var(--space-xl);
+  margin-bottom: var(--space-lg);
+}
+.send-option {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: 0;
+  font-family: var(--font-family-base);
+  color: var(--action-default);
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  max-width: 120px;
+}
+.send-option:hover .send-option__circle:not(.is-selected) {
+  border-color: var(--action-default);
+}
+.send-option__circle {
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  border: 2px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  font-size: 28px;
+  color: var(--action-default);
+  background: var(--white-space-base);
+  transition: border-color .15s;
+}
+.send-option__circle.is-selected {
+  border-color: var(--context-success);
+  border-width: 3px;
+}
+.send-option__check {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--context-success);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: #fff;
+}
+.send-option__label { line-height: 1.3; }
+
+/* Name row grid */
+.name-row {
+  display: flex;
+  gap: var(--space-md);
+}
+.email-add-row {
+  display: flex;
+  gap: var(--space-sm);
+  align-items: flex-end;
+}
+.add-btn { white-space: nowrap; height: 40px; }
+@media (min-width: 961px) { .add-btn { height: 50px; } }
+
+/* Send action row */
+.send-action-row {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-sm);
+  margin: var(--space-lg) 0 var(--space-md);
+}
+
+/* Send list */
+.send-list-section { margin-top: var(--space-md); }
+.send-list-heading {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0 0 var(--space-xs);
+  color: var(--body-font-strong);
+}
+.send-list-box {
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  min-height: 100px;
+  background: var(--white-space-base);
+}
+.send-list-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  padding: var(--space-xl) var(--space-md);
+  color: var(--body-font-weak);
+  font-size: 14px;
+}
+.send-list-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: 10px var(--space-md);
+  border-bottom: 1px solid var(--white-space-z-index4);
+  font-size: 14px;
+}
+.send-list-item:last-child { border-bottom: 0; }
+.send-list-name { flex: 1; }
+.send-list-email { color: var(--body-font-weak); }
+.send-list-remove {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--body-font-weak);
+  padding: 4px;
+  display: inline-flex;
+  align-items: center;
+}
+.send-list-remove:hover { color: var(--context-error); }
+.send-continue-note {
+  text-align: center;
+  font-size: 13px;
+  color: var(--body-font-weak);
+  margin: var(--space-md) 0 0;
+}
+/* #btn-continue sizing now handled by .form-footer-btns */
+
+/* Send panel spacing */
+.send-panel { margin-top: var(--space-sm); }
+
+
+/* ── Revoke modal ─────────────────────────────────────────────── */
+.revoke-modal { max-width: 780px; border-radius: var(--radius-sm); }
+.revoke-modal-title-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+.revoke-modal-body {
+  text-align: center;
+  padding: 48px 40px 32px;
+}
+.revoke-confirm-line {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--body-font-strong);
+  margin: 0 0 var(--space-xs);
+  line-height: 1.5;
+}
+.revoke-undo-note {
+  color: var(--body-font-weak);
+  margin: var(--space-sm) 0 0;
+}
+.revoke-modal-foot {
+  display: flex;
+  gap: var(--space-sm);
+  justify-content: stretch;
+  padding: var(--space-md) var(--space-lg);
+}
+.revoke-modal-foot .tasty-btn { flex: 1; justify-content: center; }
+
+
+/* ── FilterTag row + left cap ─────────────────────────────────── */
+.filter-tag-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+  margin-top: 20px;
+  margin-bottom: var(--space-sm);
+}
+
+/* Ghost+primary badge inside filter tags (WCAG-safe at 4.5:1 blue on white) */
+.filter-tag-row .tasty-badge {
+  background: transparent !important;
+  color: var(--action-default) !important;
+  border: 1px solid var(--action-default) !important;
+  font-weight: 700;
+}
+/* When tag is active (dark bg), invert badge to white outline */
+.tasty-filter-tag.is-active .tasty-badge {
+  color: #fff !important;
+  border-color: rgba(255,255,255,0.75) !important;
+}
+
+/* Left cap: ring (inactive) → checkmark (active) */
+.ft-cap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+.ft-cap__ring {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid currentColor;
+  display: block;
+}
+.ft-cap__check {
+  position: absolute;
+  font-size: 13px;
+  display: none;
+}
+/* Active state: hide ring, show check */
+.tasty-filter-tag.is-active .ft-cap__ring  { display: none; }
+.tasty-filter-tag.is-active .ft-cap__check { display: inline-block; }
+
+
+/* ── Send timing navToggle ────────────────────────────────────── */
+.send-action-row {
+  display: flex;
+  justify-content: center;
+  margin: var(--space-lg) 0 0;
+}
+
+
+/* ── Library panel (Add From Learner Directory) ───────────────── */
+.library-search-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-md);
+  margin-bottom: var(--space-sm);
+}
+.library-search-left {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  max-width: 340px;
+}
+.library-search-input-wrap {
+  display: flex;
+  width: 100%;
+}
+.library-count-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--body-font-base);
+  white-space: nowrap;
+  padding-bottom: 8px;
+}
+.learner-list-box {
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  max-height: 280px;
+  overflow-y: auto;
+}
+.learner-list-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: 11px var(--space-md);
+  border-bottom: 1px solid var(--white-space-z-index4);
+  cursor: pointer;
+  transition: background .1s;
+}
+.learner-list-row:last-child { border-bottom: 0; }
+.learner-list-row:hover { background: var(--white-space-z-index2); }
+.learner-list-row.is-checked { background: var(--status-base-2); }
+.learner-checkbox {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  accent-color: var(--action-default);
+  cursor: pointer;
+}
+.learner-name {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--body-font-strong);
+}
+.learner-email {
+  font-size: 13px;
+  color: var(--body-font-weak);
+  text-align: right;
+}
+
+
+/* ── Individual panel send list header ────────────────────────── */
+.send-list-heading-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-xs);
+}
+.send-list-clear-btn {
+  background: none;
+  border: none;
+  color: var(--action-default);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  font-family: var(--font-family-base);
+}
+.send-list-clear-btn:hover { text-decoration: underline; }
+
+
+/* ── Confirmation screen ──────────────────────────────────────── */
+.confirm-header {
+  text-align: center;
+}
+.confirm-body {
+  padding: 32px 48px !important;
+}
+.confirm-summary-heading {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--body-font-strong);
+  margin: 0 0 var(--space-sm);
+  padding-bottom: var(--space-xs);
+  border-bottom: 1px solid var(--c-border);
+}
+.confirm-summary-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-lg);
+  margin-bottom: var(--space-lg);
+  padding-top: var(--space-sm);
+}
+.confirm-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.confirm-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--body-font-strong);
+}
+.confirm-expires-line {
+  font-size: 14px;
+  color: var(--body-font-base);
+}
+.confirm-applies-tag {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--context-bold);
+  margin-top: 2px;
+}
+.confirm-stats {
+  display: flex;
+  gap: var(--space-xl);
+  flex-shrink: 0;
+}
+.confirm-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+.confirm-stat__num {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--body-font-strong);
+  line-height: 1;
+}
+.confirm-stat__label {
+  font-size: 12px;
+  color: var(--body-font-weak);
+  text-align: center;
+  white-space: nowrap;
+}
+.confirm-copy-area {
+  text-align: center;
+  margin-top: var(--space-md);
+}
+.confirm-share-note {
+  font-size: 14px;
+  color: var(--body-font-weak);
+  margin: 0 0 var(--space-sm);
+}
+.copy-code-btn {
+  white-space: nowrap;
+}
+
+/* ── Schedule fields (revealed by Schedule Send) ──────────────── */
+.schedule-fields {
+  margin-top: var(--space-md);
+}
+.schedule-fields-row {
+  display: flex;
+  gap: var(--space-md);
+  align-items: flex-start;
+}
+.schedule-dt-input {
+  padding-right: 36px; /* room for calendar icon */
+}
+.schedule-tz-select {
+  appearance: none;
+  -webkit-appearance: none;
+}
+.confirm-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-md) var(--space-lg);
+}
+
+
+/* ── Responsive ───────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .coupon-ctrl-bar { flex-direction: column; align-items: flex-start; }
+  .coupon-ctrl-bar__right { width: 100%; flex-direction: column; }
+  .coupon-ctrl-bar__right .tasty-search-group { width: 100%; }
+  .coupon-ctrl-bar__right #btn-create { width: 100%; justify-content: center; }
+  .create-form-body { padding: 20px !important; }
+  .send-form-body { padding: 20px !important; }
+  .confirm-body { padding: 20px !important; }
+  .create-form-footer,
+  .confirm-footer { padding: var(--space-md); }
+  .form-footer-btns { max-width: 100%; }
+  .name-row { flex-direction: column; }
+  .send-options-row { gap: var(--space-md); }
+  .send-option { max-width: 80px; font-size: 12px; }
+  .send-option__circle { width: 56px; height: 56px; font-size: 22px; }
+  .library-search-header { flex-direction: column; align-items: flex-start; }
+  .confirm-summary-row { flex-direction: column; }
+  .schedule-fields-row { flex-direction: column; }
+  .filter-tag-row { gap: var(--space-xxs); }
+  .coupon-page-title { font-size: 20px; }
+  .page-content { padding: var(--space-md); }
+  .usage-controls { flex-wrap: wrap; gap: var(--space-sm); }
+  .send-action-row .tasty-navtoggle { width: 100%; }
+}
+
+@media (max-width: 480px) {
+  .send-options-row { flex-direction: column; align-items: center; }
+  .filter-tag-row { flex-direction: column; align-items: flex-start; }
+  .confirm-stats { gap: var(--space-lg); }
+  .usage-controls { flex-direction: column; align-items: flex-start; }
+}

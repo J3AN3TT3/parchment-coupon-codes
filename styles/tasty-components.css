@@ -1,0 +1,983 @@
+/* ════════════════════════════════════════════════════════════════════
+   TASTY COMPONENT LAYER — rebuilt from @parchment/tastysoft source (v5.56.1)
+   ════════════════════════════════════════════════════════════════════
+   Every value below was read from the actual component source, not a
+   summary. Sizes are the DESKTOP scale (≥961px); Tasty shrinks one step
+   below largeMin. Source files cited per block.
+
+   Opt-in layer: apply these classes to markup to get exact Tasty styling.
+   Modifier convention mirrors the React props:
+     colorContext → .is-{primary|success|warning|error|bold|note}
+     backgroundStyle → .is-{solid|ghost|frosted|transparent}
+     size → .is-{xs|sm|md|lg}
+   ════════════════════════════════════════════════════════════════════ */
+
+
+/* ─────────────────────────────────────────────────────────────────────
+   BUTTON — Button.tsx. Default group=default, colorContext=primary,
+   backgroundStyle=solid, size=medium (50px). Hover fills with the context
+   gradient + white text for ALL background styles (incl. ghost). Focus ring
+   is turquoiseBlue (hardcoded in Button.tsx, not the theme focusRing).
+   ───────────────────────────────────────────────────────────────────── */
+.tasty-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 40px;                         /* small (<961); medium (50) at >=961 */
+  padding: 0 20px;
+  border: 1px solid var(--action-default);
+  border-radius: 4px;
+  background: var(--action-default);    /* primary solid */
+  color: var(--context-neutral);        /* white */
+  font-family: var(--font-family-base);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+  text-transform: capitalize;           /* Button.tsx capitalizes labels */
+  cursor: pointer;
+  text-decoration: none;
+  /* No background transition: the hover is a gradient (background-image) over a
+     solid (background-color); transitioning between them flashes on hover-off as
+     the gradient snaps away while the color tweens. Tasty's Button has no
+     transition either — hover is instant. */
+}
+.tasty-btn__content { display: inline-flex; align-items: center; gap: 8px; }
+
+/* Hover + focus-visible: fill with the (primary) gradient + white. Context
+   overrides below swap in the matching gradient. */
+.tasty-btn:hover:not(:disabled):not(.is-disabled),
+.tasty-btn:focus-visible:not(:disabled):not(.is-disabled) {
+  background: var(--action-hover-primary);
+  color: var(--context-neutral);
+}
+.tasty-btn:active { background: var(--action-active); }
+.tasty-btn:focus-visible { outline: 4px solid var(--turquoiseBlue); outline-offset: 4px; z-index: 1; }
+/* (disabled rule is defined LAST, after all colorContext/backgroundStyle rules,
+   so it overrides them — see end of button block.) */
+
+/* Sizes — base = small-screen scale (one tier down via SMALLER_BUTTON_SIZE_MAP); desktop scale restored in the @media(min-width:961px) block below */
+.tasty-btn.is-xs { height: 20px; padding: 0 15px; border-radius: 2px; font-size: 10px; }
+.tasty-btn.is-sm { height: 30px; padding: 0 15px; border-radius: 3px; font-size: 13px; }
+.tasty-btn.is-md { height: 40px; padding: 0 20px; border-radius: 4px; font-size: 13px; }
+.tasty-btn.is-lg { height: 50px; padding: 0 30px; border-radius: 5px; font-size: 16px; }
+
+/* colorContext (solid): bg + matching gradient hover */
+.tasty-btn.is-primary { background: var(--action-default); border-color: var(--action-default); }
+.tasty-btn.is-primary:hover:not(:disabled) { background: var(--action-hover-primary); }
+.tasty-btn.is-success { background: var(--context-success); border-color: var(--context-success); }
+.tasty-btn.is-success:hover:not(:disabled) { background: var(--action-hover-success); }
+.tasty-btn.is-warning { background: var(--context-warning); border-color: var(--context-warning); }
+.tasty-btn.is-warning:hover:not(:disabled) { background: var(--action-hover-warning); }
+.tasty-btn.is-error   { background: var(--context-error); border-color: var(--context-error); }
+.tasty-btn.is-error:hover:not(:disabled) { background: var(--action-hover-error); }
+.tasty-btn.is-bold    { background: var(--context-bold); border-color: var(--context-bold); }
+.tasty-btn.is-bold:hover:not(:disabled) { background: var(--action-hover-bold); }
+
+/* backgroundStyle: ghost = white bg, colored border+text; hover still fills
+   gradient + white (Button.tsx applies the hover to every background style). */
+.tasty-btn.is-ghost { background: var(--context-neutral); border-color: var(--action-default); color: var(--action-default); }
+.tasty-btn.is-ghost:hover:not(:disabled) { background: var(--action-hover-primary); color: var(--context-neutral); }
+.tasty-btn.is-ghost.is-error { border-color: var(--context-error); color: var(--context-error); }
+.tasty-btn.is-ghost.is-error:hover:not(:disabled) { background: var(--action-hover-error); color: var(--context-neutral); }
+.tasty-btn.is-bold.is-ghost { border-color: var(--context-bold); color: var(--context-bold); }   /* neutral cancel */
+.tasty-btn.is-bold.is-ghost:hover:not(:disabled) { background: var(--action-hover-bold); color: var(--context-neutral); }
+
+.tasty-btn.is-frosted { background: var(--white-space-z-index2); color: var(--action-default); border-color: transparent; }
+.tasty-btn.is-frosted:hover:not(:disabled) { background: var(--action-hover-primary); color: var(--context-neutral); }
+.tasty-btn.is-transparent { background: transparent; color: var(--action-default); border-color: transparent; }
+.tasty-btn.is-transparent:hover:not(:disabled) { background: var(--action-hover-primary); color: var(--context-neutral); }
+
+/* group=circle / icon · full-width helper */
+.tasty-btn.is-circle { padding: 0; border-radius: 50%; width: 40px; }
+.tasty-btn.is-circle.is-sm { width: 30px; }
+.tasty-btn.is-circle.is-xs { width: 20px; }
+.tasty-btn.is-full { width: 100%; }
+
+/* Disabled — LAST so it beats every colorContext (equal specificity → source
+   order wins) and the 3-class ghost combos (the :disabled-qualified selectors
+   raise specificity above them). Gray fill + gray text, not the context color. */
+.tasty-btn:disabled,
+.tasty-btn.is-disabled,
+.tasty-btn.is-ghost.is-error:disabled,
+.tasty-btn.is-ghost.is-error.is-disabled,
+.tasty-btn.is-bold.is-ghost:disabled,
+.tasty-btn.is-bold.is-ghost.is-disabled {
+  background: var(--border-color);
+  border-color: var(--border-color);
+  color: var(--body-font-disabled);
+  font-weight: 300;
+  cursor: not-allowed;
+}
+/* responsive: restore desktop button scale at >=961 (base above is one tier smaller per SMALLER_BUTTON_SIZE_MAP) */
+@media (min-width: 961px) {
+  .tasty-btn { height: 50px; padding: 0 30px; border-radius: 5px; font-size: 16px; }
+  .tasty-btn.is-xs { height: 30px; padding: 0 15px; border-radius: 3px; font-size: 13px; }
+  .tasty-btn.is-sm { height: 40px; padding: 0 20px; border-radius: 4px; font-size: 13px; }
+  .tasty-btn.is-md { height: 50px; padding: 0 30px; border-radius: 5px; font-size: 16px; }
+  .tasty-btn.is-lg { height: 60px; padding: 0 40px; border-radius: 6px; font-size: 20px; }
+  .tasty-btn.is-circle { width: 50px; }
+  .tasty-btn.is-circle.is-sm { width: 40px; }
+  .tasty-btn.is-circle.is-xs { width: 30px; }
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────
+   STATUS TAG — StatusTag.tsx. SQUARE (no radius), padding 5×10, gap 6,
+   font 16 (medium). Default backgroundStyle=frosted, colorContext=note.
+   context→token map (statusTagConstants.ts):
+     success→base2/fg2 · warning→base5/fg5 · error→base3/fg3
+     primary→base1/fg1 · note→base4/fg4
+   ───────────────────────────────────────────────────────────────────── */
+.tasty-status-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  border: 1px solid transparent;
+  font-size: 13px;                 /* small scale (<961px) */
+  font-weight: 400;                /* truth sets no weight → inherits ~400 (was 600) */
+  white-space: nowrap;
+  /* default = frosted */
+  background: var(--white-space-z-index2);
+  color: var(--body-font-weak);
+}
+.tasty-status-tag__label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 200px; }
+/* scale: small (table-density) drops font to 13px; padding stays 5×10 per Tasty */
+.tasty-status-tag.is-sm { font-size: 13px; }
+.tasty-status-tag.is-sm i { font-size: 13px; }
+.tasty-status-tag.is-solid.is-success { background: var(--status-base-2); color: var(--status-foreground-2); }
+.tasty-status-tag.is-solid.is-warning { background: var(--status-base-5); color: var(--status-foreground-5); }
+.tasty-status-tag.is-solid.is-error   { background: var(--status-base-3); color: var(--status-foreground-3); }
+.tasty-status-tag.is-solid.is-primary { background: var(--status-base-1); color: var(--status-foreground-1); }
+.tasty-status-tag.is-solid.is-note    { background: var(--status-base-4); color: var(--status-foreground-4); }
+.tasty-status-tag.has-border.is-success { border-color: var(--status-foreground-2); }
+.tasty-status-tag.has-border.is-warning { border-color: var(--status-foreground-5); }
+.tasty-status-tag.has-border.is-error   { border-color: var(--status-foreground-3); }
+.tasty-status-tag.has-border.is-primary { border-color: var(--status-foreground-1); }
+.tasty-status-tag.has-border.is-note    { border-color: var(--status-foreground-4); }
+/* responsive: default (medium) scale upsizes at >=961; .is-sm (small) stays 13 */
+@media (min-width: 961px) { .tasty-status-tag { font-size: 16px; } .tasty-status-tag.is-sm, .tasty-status-tag.is-sm i { font-size: 13px; } }
+
+
+/* ─────────────────────────────────────────────────────────────────────
+   BANNER — Banner.tsx. Full-width, SQUARE, min-height 50, padding 10,
+   font ~16. Solid: bg=colorContext, fg=neutral(white). ghost/frosted/
+   transparent: surface bg + body text. Icon has a right divider rule.
+   Default colorContext = bold.
+   ───────────────────────────────────────────────────────────────────── */
+.tasty-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 50px;
+  padding: 10px;
+  font-size: 14px;                      /* BANNER_FONT_SIZES.medium = 14px (Banner has its own scale; NOT Globals 16) */
+  color: var(--context-neutral);
+  background: var(--context-bold);      /* default = bold */
+}
+.tasty-banner__icon {
+  display: inline-flex;
+  align-items: center;
+  font-size: 16px;
+  padding-right: 10px;
+  border-right: 1px solid currentColor; /* Banner.tsx divider after icon */
+}
+.tasty-banner__message { flex: 1; }
+.tasty-banner__title { font-weight: var(--font-weight-bold); text-transform: uppercase; margin-right: .25em; }   /* MessageTitle: uppercase + .25em right gap */
+.tasty-banner.is-primary { background: var(--action-default); }
+.tasty-banner.is-success { background: var(--context-success); }
+.tasty-banner.is-warning { background: var(--context-warning); }
+.tasty-banner.is-error   { background: var(--context-error); }
+.tasty-banner.is-bold    { background: var(--context-bold); }
+.tasty-banner.is-ghost,
+.tasty-banner.is-frosted,
+.tasty-banner.is-transparent { color: var(--body-font-base); }
+.tasty-banner.is-ghost       { background: var(--context-neutral); }
+.tasty-banner.is-frosted     { background: var(--white-space-z-index2); }
+.tasty-banner.is-transparent { background: transparent; }
+
+
+/* ─────────────────────────────────────────────────────────────────────
+   CHECKBOX — Checkbox.tsx. Container gap .5em, font 16. The box itself is
+   an SVG (CheckboxIcon) — its exact stroke/fill weren't read from source,
+   so the box visual below is APPROXIMATED (checked fill = action.default).
+   Verify against CheckboxIcon before relying on pixel fidelity.
+   ───────────────────────────────────────────────────────────────────── */
+.tasty-checkbox { display: inline-flex; align-items: center; gap: .5em; width: fit-content; font-size: 16px; cursor: pointer; }
+.tasty-checkbox__box {
+  flex: none; width: 18px; height: 18px;
+  border: 1px solid var(--border-color);
+  border-radius: 3px;
+  background: var(--white-space-base);
+  display: inline-flex; align-items: center; justify-content: center;
+  color: transparent;
+}
+/* Checkbox.tsx: checked/indeterminate box fills emperor (grey), glyph white —
+   NOT a blue fill. */
+.tasty-checkbox.is-checked .tasty-checkbox__box,
+.tasty-checkbox.is-indeterminate .tasty-checkbox__box {
+  background: var(--emperor); border-color: var(--emperor); color: var(--white);
+}
+.tasty-checkbox.is-disabled { cursor: not-allowed; color: var(--boulder); font-style: italic; }   /* CheckboxContainer disabled: boulder + italic (Checkbox.tsx:219-224) */
+.tasty-checkbox.is-disabled .tasty-checkbox__box { background: var(--border-color); border-color: var(--border-color); }   /* disabled box = alto grey */
+.tasty-checkbox__box:focus-visible { outline: 4px solid var(--focus-ring); outline-offset: 4px; }   /* focus ring (latent: works when box is focusable) */
+/* responsive: box 18 (small,<961) -> 24 (medium,>=961); radius fixed 3px per source */
+@media (min-width: 961px) { .tasty-checkbox__box { width: 24px; height: 24px; } }
+
+
+/* ─────────────────────────────────────────────────────────────────────
+   TOOLTIP — Tooltip.tsx. Message: padding 7×14, radius 5, dark surface
+   (tooltip.base) + light text. Title section: radius 4 4 0 0.
+   ───────────────────────────────────────────────────────────────────── */
+.tasty-tooltip {
+  display: inline-block;
+  max-width: 280px;
+  background: var(--tooltip-base);
+  color: var(--tooltip-text);
+  border-radius: 5px;
+  padding: 7px 14px;
+  font-size: 13px;
+  line-height: 1.4;
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
+}
+/* colorContext variants (single-section message tooltip, isSolid). Default = bold
+   (codGray/mercury, above). success/error/primary = saturated + white; light = fog + body text + border. */
+.tasty-tooltip.is-success { background: var(--context-success); color: var(--white); }
+.tasty-tooltip.is-error   { background: var(--context-error); color: var(--white); }
+.tasty-tooltip.is-primary { background: var(--status-foreground-1); color: var(--white); }
+.tasty-tooltip.is-light   { background: var(--white-space-z-index1); color: var(--body-font-base); border: 1px solid var(--border-color); }
+/* Title section is a full-width band ON TOP — must be block, or it runs inline
+   into the body text. */
+.tasty-tooltip__header {
+  display: block;
+  background: var(--tooltip-header);
+  color: var(--context-neutral);
+  font-weight: var(--font-weight-bold);
+  border-radius: 4px 4px 0 0;
+  margin: -7px -14px 7px;
+  padding: 7px 14px;
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────
+   TABLE — shell verified against Table.tsx subcomponents (session 7):
+   header = white bg + 700 + 3px mineShaft rule + 8px 25px (TableHeader.tsx:157-162),
+   cells = 15px 25px + 1px mercury divider, hover alabaster, selected wildSand
+   (TableRow.tsx:245,261,297). Mobile <481 card layout + condensed variant +
+   sort/checkbox/pagination chrome = accepted shell limits.
+   ───────────────────────────────────────────────────────────────────── */
+.tasty-table { width: 100%; border-collapse: collapse; font-size: 16px; color: var(--body-font-base); }
+.tasty-table thead th,
+.tasty-table .tasty-table__th {
+  text-align: left; padding: 8px 25px;
+  background: var(--white-space-base); color: var(--body-font-base);
+  font-weight: var(--font-weight-bold); border-bottom: 3px solid var(--body-font-base);
+}
+.tasty-table tbody td,
+.tasty-table .tasty-table__td { padding: 15px 25px; border-bottom: 1px solid var(--white-space-z-index4); vertical-align: middle; font-weight: 500; }
+.tasty-table tbody tr:hover,
+.tasty-table .tasty-table__row:hover { background: var(--white-space-z-index2); }
+.tasty-table tbody tr.is-selected,
+.tasty-table .tasty-table__row.is-selected { background: var(--white-space-z-index3); }
+
+
+/* ════════════════════════════════════════════════════════════════════
+   ADDED COMPONENTS — parchment-tasty-kit complement layer
+   ════════════════════════════════════════════════════════════════════
+   Same .tasty-{name} + .is-{modifier} convention as the blocks above.
+   Tier 1/2 are faithful to source; Tier 3 "shells" are cosmetic
+   approximations (marked) — enough to look right + be clickable in a
+   prototype, NOT a port of the production component's logic.
+   ════════════════════════════════════════════════════════════════════ */
+
+/* ── FORM: FieldLabel / TextField / TextArea — TextField.tsx, FieldLabel.tsx ── */
+/* TextField.tsx + useValidation.tsx: validation shows a LEFT icon (valid = check
+   in basil, error = warning/alert in cherry — NOT an X), a pale bg wash, a 1px
+   colored ring + a thicker colored left edge, and (error) red input text +
+   placeholder. Required asterisk lives on the LABEL in thunderBird. Input text
+   is weight 600. */
+.tasty-field { display: flex; flex-direction: column; gap: var(--space-xs); font-size: 13px; }
+.tasty-field__label { font-weight: var(--font-weight-semibold); color: var(--body-font-base); }
+.tasty-field__label .req { color: var(--thunderBird); margin-left: 2px; }
+.tasty-field__control { position: relative; display: block; }
+.tasty-field__vicon { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); width: 16px; height: 16px; font-size: 16px; display: none; pointer-events: none; }
+.tasty-input, .tasty-textarea {
+  font-family: var(--font-family-base); font-size: 13px; font-weight: 600; color: var(--body-font-strong);
+  background: var(--white-space-base); border: 1px solid var(--border-color);
+  border-radius: var(--radius-md); padding: 0 12px; height: 40px; width: 100%;
+}
+.tasty-input::placeholder, .tasty-textarea::placeholder { color: var(--body-font-weak); font-weight: 400; }
+.tasty-textarea { height: auto; min-height: 80px; padding: 10px 12px; resize: vertical; line-height: 1.8; font-weight: 400; }
+.tasty-input:focus, .tasty-textarea:focus {
+  outline: 4px solid var(--focus-ring); outline-offset: 4px;        /* offset 2 -> 4 (matches truth/Button) */
+  background: var(--validation-base-focus);                          /* border stays neutral; truth does NOT turn it blue */
+}
+/* valid / error: pale wash + 1px ring + thick colored left edge + left icon */
+.tasty-field.is-valid .tasty-input { background: var(--validation-base-valid); border-color: var(--context-success); border-left-width: 4px; padding-left: 34px; }
+.tasty-field.is-valid .tasty-field__vicon { display: inline-flex; color: var(--context-success); }
+.tasty-field.is-error .tasty-input { background: var(--validation-base-error); border-color: var(--context-error); border-left-width: 4px; padding-left: 34px; color: var(--context-error); }
+.tasty-field.is-error .tasty-input::placeholder { color: var(--context-error); }
+.tasty-field.is-error .tasty-field__vicon { display: inline-flex; color: var(--context-error); }
+.tasty-field.is-error .tasty-field__msg { color: var(--context-error); }
+.tasty-field__msg { font-size: 13px; color: var(--body-font-weak); }
+.tasty-input:disabled, .tasty-textarea:disabled { background: var(--white-space-z-index4); color: var(--body-font-weak); font-style: italic; font-weight: 300; cursor: not-allowed; }
+/* responsive: small (<961) -> medium (>=961): height 40->50, font 13->16, radius 4->5 */
+@media (min-width: 961px) { .tasty-input, .tasty-textarea { font-size: 16px; border-radius: 5px; } .tasty-input { height: 50px; } }
+/* FieldLabel: label font 13->16, label-to-control gap 5->8 at >=961 */
+@media (min-width: 961px) { .tasty-field { gap: 8px; } .tasty-field__label { font-size: 16px; } }
+
+/* ── FORM: Select — Select.tsx (shell: styled native select) ── */
+.tasty-select {
+  font-family: var(--font-family-base); font-size: 16px; color: var(--body-font-base);  /* Select uses HEIGHT[scale]/FONT_SIZES[scale] DIRECTLY (not responsive) -> medium fixed */
+  background: var(--white-space-base) no-repeat right 10px center;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23006AA8' stroke-width='2' stroke-linecap='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  border: 1px solid var(--border-color); border-radius: 5px;
+  height: 50px; padding: 0 34px 0 12px; width: 100%; cursor: pointer; appearance: none;
+}
+.tasty-select:focus { outline: 4px solid var(--focus-ring); outline-offset: 2px; border-color: var(--action-default); }
+
+/* ── FORM: RadioList — Radio.tsx: 16px disc, the "ring" is a 1px mineShaft
+      OUTLINE at offset 3px (not a border); selected = solid mineShaft disc
+      (no inner dot). ── */
+.tasty-radio { display: inline-flex; align-items: center; gap: 12px; font-size: 13px; cursor: pointer; padding-left: 4px; }
+.tasty-radio__dot { flex: none; width: 12px; height: 12px; border-radius: 50%; outline: 1px solid var(--body-font-base); outline-offset: 3px; background: transparent; }
+.tasty-radio.is-checked .tasty-radio__dot { background: var(--body-font-base); }
+.tasty-radio.is-disabled { cursor: not-allowed; color: var(--body-font-disabled); font-style: italic; }
+.tasty-radio.is-disabled .tasty-radio__dot { outline-color: var(--body-font-disabled); background: var(--body-font-disabled); box-shadow: 0 0 0 3px var(--body-font-disabled); }   /* disabled = grey fill + 3px shadow ring */
+.tasty-radio.is-invalid { color: var(--thunderBird); }
+.tasty-radio.is-invalid .tasty-radio__dot { outline-color: var(--thunderBird); }   /* invalid = thunderBird ring */
+/* responsive: knob 12 (small,<961) -> 16 (medium,>=961); label font 13 -> 16 */
+@media (min-width: 961px) { .tasty-radio { font-size: 16px; } .tasty-radio__dot { width: 16px; height: 16px; } }
+
+/* ── SELECTION: Toggle — Toggle.tsx default = ghost: WHITE track, the color
+      lives in the border + knob (grey/bold off → action-default on). Track
+      64×34, knob 24. .is-solid = filled track variant. ── */
+/* Toggle — faithful to tastysoft Toggle.tsx: the knob (SliderCircle) ALWAYS holds
+   an icon (CheckIcon when on / CancelIcon × when off); on/off text sits INSIDE the
+   track opposite the knob (track flips row→row-reverse when on); an optional external
+   label sits OUTSIDE the pill. --tog-fg = foreground (knob fill, border, text);
+   --tog-track = track fill + knob-icon color. ghost (default) = white track + colored
+   foreground; .is-solid inverts to a colored track + white foreground. */
+.tasty-toggle { --tog-fg: var(--c-text-muted); --tog-track: var(--c-surface); --tog-h: 34px; --tog-w: 75px; --tog-knob: 24px; --tog-fs: 13px; display: inline-flex; align-items: center; gap: 10px; cursor: pointer; font-family: "Open Sans", Arial, Helvetica, sans-serif; }
+.tasty-toggle.is-on { --tog-fg: var(--c-text-strong); }
+.tasty-toggle.is-primary.is-on { --tog-fg: var(--action-default); }
+.tasty-toggle.is-success.is-on { --tog-fg: var(--c-success); }
+.tasty-toggle.is-solid { --tog-fg: var(--context-neutral); --tog-track: var(--c-text-muted); }   /* solid fg = colorContext.neutral (white) in BOTH states (toggleConstants colorMap.foreground) */
+.tasty-toggle.is-solid.is-on { --tog-track: var(--c-text-strong); --tog-fg: var(--context-neutral); }   /* re-assert white fg AFTER the context .is-*.is-on rules — else knob/text vanish into the track */
+.tasty-toggle.is-solid.is-primary.is-on { --tog-track: var(--action-default); }
+.tasty-toggle.is-solid.is-success.is-on { --tog-track: var(--c-success); }
+.tasty-toggle__track { box-sizing: border-box; display: flex; flex-direction: row; align-items: center; justify-content: space-between; min-width: var(--tog-w); height: var(--tog-h); padding: 0 4px; border-radius: 1.25em; background: var(--tog-track); border: 1px solid var(--tog-fg); font-size: var(--tog-fs); transition: background .2s ease, border-color .2s ease; }
+.tasty-toggle.is-on .tasty-toggle__track { flex-direction: row-reverse; }
+.tasty-toggle__circle { flex: 0 0 auto; width: var(--tog-knob); height: var(--tog-knob); border-radius: 50%; background: var(--tog-fg); display: inline-flex; align-items: center; justify-content: center; transform: translateX(-10%); transition: transform .2s ease, background .2s ease; }
+.tasty-toggle.is-on .tasty-toggle__circle { transform: translateX(10%); }
+.tasty-toggle__circle i { font-size: calc(var(--tog-knob) * 0.58); line-height: 1; color: var(--tog-track); }
+.tasty-toggle__ic-on { display: none; }
+.tasty-toggle.is-on .tasty-toggle__ic-on { display: inline-flex; }
+.tasty-toggle.is-on .tasty-toggle__ic-off { display: none; }
+.tasty-toggle__text { flex: 1 1 auto; min-width: 1.6em; padding: 0 .4em; text-align: center; font-weight: 600; color: var(--tog-fg); }
+.tasty-toggle__on { display: none; }
+.tasty-toggle.is-on .tasty-toggle__on { display: inline; }
+.tasty-toggle.is-on .tasty-toggle__off { display: none; }
+.tasty-toggle__label { font-weight: 600; font-size: 16px; color: var(--c-text-strong); }
+.tasty-toggle.is-sm { --tog-h: 30px; --tog-w: 70px; --tog-knob: 22px; --tog-fs: 10px; }
+.tasty-toggle.is-disabled,
+.tasty-toggle.is-disabled.is-on,
+.tasty-toggle.is-solid.is-disabled,
+.tasty-toggle.is-solid.is-disabled.is-on { cursor: not-allowed; --tog-track: var(--white-space-z-index4); --tog-fg: var(--body-font-weak); }   /* disabled = mercury track + emperor fg, FULL opacity (colorMap.*.disabled) — extra selectors outrank the context/solid var rules */
+
+/* ── TAGS: FilterTag — FilterTag.tsx (pill, removable) ── */
+/* FilterTag.tsx: pill, 40px tall, unselected = alabaster bg + mercury border +
+   action-default (blue) text; active = filterTag.active (tealBlue) bg +
+   deepCerulean border + white text. */
+.tasty-filter-tag {
+  display: inline-flex; align-items: center; gap: 6px; height: 40px; padding: 0 14px;
+  border: 1px solid var(--white-space-z-index4); border-radius: var(--radius-pill);
+  background: var(--white-space-z-index2); color: var(--action-default); font-size: 16px; cursor: pointer;
+}
+.tasty-filter-tag.is-active { background: var(--action-active); border-color: var(--action-default); color: var(--white); }
+.tasty-filter-tag__x { display: inline-flex; opacity: .7; }
+.tasty-filter-tag:focus-visible { outline: 4px solid var(--turquoiseBlue); outline-offset: 4px; }   /* latent: kit renders span; ring shows on button/tabindex */
+.tasty-filter-tag__x:hover { opacity: 1; }
+
+/* ── TAGS: SortTag — kit-original table column-sort header (uppercase text + asc/desc caret).
+   NOTE: tastysoft's real SortTag.tsx is a Select-dropdown trigger pill; this kit class is a
+   deliberate table-sort utility, not a 1:1 of that component (decision: keep as-is). ── */
+.tasty-sort-tag { display: inline-flex; align-items: center; gap: 4px; background: none; border: 0; padding: 0; cursor: pointer; font: inherit; font-weight: var(--font-weight-semibold); color: var(--body-font-strong); text-transform: uppercase; letter-spacing: .02em; font-size: 13px; }
+.tasty-sort-tag:focus-visible { outline: 4px solid var(--turquoiseBlue); outline-offset: 4px; }
+.tasty-sort-tag .tcon { font-size: 14px; opacity: .4; }
+.tasty-sort-tag.is-asc .tcon, .tasty-sort-tag.is-desc .tcon { opacity: 1; color: var(--action-default); }
+.tasty-sort-tag.is-desc .tcon { transform: rotate(180deg); }
+
+/* ── BADGE: BadgeCounter — BadgeCounter.tsx ── */
+/* BadgeCounter.tsx: mono font, weight 700, default colorContext = bold (grey). */
+.tasty-badge { display: inline-flex; align-items: center; justify-content: center; min-width: 36px; height: 20px; padding: 0 .75em; border: 1px solid transparent; border-radius: 10px; background: var(--badge-ctx, var(--context-bold)); color: var(--context-neutral); font-family: var(--font-family-mono); font-size: 13px; font-weight: var(--font-weight-bold); line-height: 1; }   /* default medium → small scale <961 (w36/h20/font13/r10); SMALLER_SIZE_MAP. solid: --badge-ctx bg + colorContext.neutral text */
+@media (min-width: 961px) { .tasty-badge { min-width: 44px; height: 24px; border-radius: 12px; font-size: 16px; } }   /* ≥961 → medium (w44/h24/font16/r12) */
+/* colorContext — sets --badge-ctx (solid bg = ctx, text context-neutral). default = bold (emperor). */
+.tasty-badge.is-bold    { --badge-ctx: var(--context-bold); }
+.tasty-badge.is-primary, .tasty-badge.is-brand { --badge-ctx: var(--action-default); }
+.tasty-badge.is-success { --badge-ctx: var(--context-success); }
+.tasty-badge.is-warning { --badge-ctx: var(--context-warning); }
+.tasty-badge.is-error, .tasty-badge.is-alert { --badge-ctx: var(--context-error); }
+.tasty-badge.is-neutral { --badge-ctx: var(--c-border-strong); }
+/* backgroundStyle — frosted ignores ctx; ghost/transparent show ctx as text/border (getBadgeBackground/Foreground). */
+.tasty-badge.is-frosted { background: var(--white-space-z-index3); color: var(--body-font-strong); border-color: var(--body-font-strong); }
+.tasty-badge.is-ghost { background: var(--context-neutral); color: var(--badge-ctx, var(--context-bold)); border-color: transparent; }   /* ghost bg = colorContext.neutral (white default / black dark) */
+.tasty-badge.is-transparent { background: transparent; color: var(--badge-ctx, var(--context-bold)); border-color: var(--badge-ctx, var(--context-bold)); }
+
+/* ── FEEDBACK: ProgressBar — ProgressBar.tsx ── */
+/* ProgressBar.tsx: track alabaster + 1px alto border, 12px tall, default fill
+   = success (basil green); error = cherry. */
+.tasty-progress { width: 100%; height: 12px; background: var(--white-space-z-index2); border: 1px solid var(--border-color); border-radius: var(--radius-pill); overflow: hidden; }
+.tasty-progress__fill { height: 100%; background: var(--context-success); border-radius: var(--radius-pill); transition: width .5s ease; }   /* truth: width .5s (was .2s) */
+.tasty-progress.is-sm { height: 6px; }   /* size=small → 6px (radius pill = fully rounded at both heights) */
+.tasty-progress.is-success .tasty-progress__fill { background: var(--context-success); }
+.tasty-progress.is-warning .tasty-progress__fill { background: var(--context-warning); }   /* hasColorThresholds 25–50% band = cider */
+.tasty-progress.is-error .tasty-progress__fill { background: var(--context-error); }
+
+/* ── FEEDBACK: Loader — Loader.tsx (spinner) ── */
+.tasty-loader { width: 24px; height: 24px; border: 3px solid var(--white-space-z-index3); border-top-color: var(--body-font-base); border-radius: 50%; animation: tasty-spin 1.5s linear infinite; }   /* Icon default spin = 1.5s (was .7s). CSS ring approximates the SVG throbber. */
+@keyframes tasty-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .tasty-loader { animation: none; } }
+
+/* ── FEEDBACK: SkeletonLoader — SkeletonLoader.tsx (shimmer) ── */
+/* truth: sweep highlight = zIndex4 (mercury #E6E6E6) over wildSand base — a DARKER pulse, not lighter. */
+.tasty-skeleton { background: linear-gradient(90deg, var(--white-space-z-index3) 25%, var(--white-space-z-index4) 50%, var(--white-space-z-index3) 75%); background-size: 200% 100%; animation: tasty-shimmer 1.3s ease-in-out infinite; border-radius: var(--radius-sm); height: 14px; }
+@keyframes tasty-shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+@media (prefers-reduced-motion: reduce) { .tasty-skeleton { animation: none; } }
+
+/* ── CONTAINER: Divider — Divider.tsx ── */
+/* Divider.tsx: default weight = medium (2px); .is-light = 1px, .is-heavy = 4px. margins = 2em. */
+.tasty-divider { border: 0; border-top: 2px solid var(--border-color); margin: 2em 0; min-width: 100px; }
+.tasty-divider.is-light { border-top-width: 1px; }
+.tasty-divider.is-heavy { border-top-width: 4px; }
+.tasty-divider.is-dashed { border-style: dashed; }   /* borderStyle prop: dashed/dotted variants */
+.tasty-divider.is-dotted { border-style: dotted; }
+.tasty-divider.is-vertical { border-top: 0; border-left: 2px solid var(--border-color); margin: 0 2em; min-width: 0; min-height: 1.25em; align-self: stretch; }
+
+/* ── CONTAINER: Tile / Card — Tile.tsx. Sharp corners, silver border, no
+      shadow at rest; hover lifts surface + reveals inst-blue left rule. ── */
+/* Tile.ts (Lit): 10px radius, transparent fill, hover = drop-shadow LIFT
+   (no colored left rule). */
+/* Tile/DashboardCredentialTile: #FCFCFC body, 10px radius, 1px border, no rest
+   shadow, hover lift 0 4px 16px. .is-sharp = the 0-radius card (ServiceSelectCard). */
+.tasty-tile { background: var(--white-space-z-index1); border: 1px solid var(--border-color); border-radius: 10px; padding: var(--space-md); overflow: hidden; transition: box-shadow .2s ease; }   /* overflow:hidden clips slotted content to the radius (Tile.ts) */
+.tasty-tile.is-sharp { border-radius: 0; box-shadow: none; padding: 20px; min-width: 280px; max-width: 480px; display: flex; flex-direction: column; align-items: center; gap: 10px; }   /* ServiceSelectCard Root: fog bg + 1px alto border (tile base ✓), pad 20, min 280/max 480, centered column gap 10 (ServiceSelectCard.tsx:68-80, constants — default scale=small) */
+.tasty-tile.is-interactive { cursor: pointer; }
+.tasty-tile.is-interactive:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.15); }
+.tasty-tile:focus-visible { outline: 4px solid var(--focus-ring); outline-offset: 2px; }   /* latent; Tile.ts :focus-visible 4px focusRing offset 2px */
+.tasty-tile__title { font-weight: var(--font-weight-bold); color: var(--body-font-strong); margin-bottom: var(--space-xs); }
+.tasty-tile__meta { color: var(--body-font-weak); font-size: 13px; }
+
+/* ── CONTAINER: MemberBox — MemberBox.tsx. Signature = a 20px solid accent bar
+      on TOP (memberColor, default alto; override via --member-color), an
+      off-white #FCFCFC body, SHARP corners, 1px border on the other 3 sides,
+      no shadow at rest. Logo = WHITE SQUARE (not a circle), 1px border. ── */
+.tasty-member-box { display: flex; align-items: center; gap: var(--space-md); padding: 20px 10px; background: var(--white-space-z-index1); border: 1px solid var(--border-color); border-top: 20px solid var(--member-color, var(--border-color)); }
+.tasty-member-logo { flex: none; width: 80px; height: 80px; object-fit: contain; border: 1px solid var(--border-color); border-radius: 0; background: var(--white); }   /* medium 80px (memberLogoConstants:17); inner Image forces white bg across themes (MemberLogo.tsx:44) */
+.tasty-member-box__name { font-weight: var(--font-weight-bold); color: var(--body-font-strong); }
+.tasty-member-box__meta { color: var(--body-font-weak); font-size: 13px; }
+@media (min-width: 481px) { .tasty-member-box { padding: 30px 20px; } }
+@media (min-width: 961px) { .tasty-member-box { padding: 40px 60px; } }   /* MemberBox responsive padding 20px10 -> 30px20 -> 40px60 (MemberBox.tsx:34-44) */
+
+/* ── CONTAINER: HeroPanel — HeroPanel.tsx. NOT a card: a TRANSPARENT flex row,
+      title left + data blocks right separated by 1px dividers. No bg/border. ── */
+.tasty-hero { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: var(--space-lg); }
+.tasty-hero__title { font-size: 2rem; font-weight: var(--font-weight-bold); color: var(--body-font-x-strong); }
+.tasty-hero__blocks { display: flex; align-items: center; }
+.tasty-hero__block { padding: 0 var(--space-lg); border-left: 1px solid var(--border-color); }
+.tasty-hero__block:first-child { border-left: 0; padding-left: 0; }
+.tasty-hero__stat { font-size: 40px; font-weight: 300; color: var(--body-font-base); }   /* canonical hero number = Content fontWeight=light, 40px -> 56px @961 (HeroPanel.stories.tsx responsiveCSS) */
+.tasty-hero__label { font-size: 16px; font-weight: 300; color: var(--body-font-base); text-transform: uppercase; }   /* = DynamicDataBlock title: Content medium 16, light, uppercase, body.base (DynamicDataBlock.tsx:53-60) */
+@media (min-width: 961px) { .tasty-hero__stat { font-size: 56px; } }
+
+/* ── CONTAINER: SearchBanner — SearchBanner.tsx: a full-width LIGHT GRAY
+      (#F9F9F9 / alabaster) band — NOT blue — no border/radius/shadow. ── */
+.tasty-search-banner { display: flex; align-items: center; gap: var(--space-md); padding: 6px; background: var(--white-space-z-index2); color: var(--body-font-base); }   /* Root padding tiers 6 -> 20 @400 -> 30/40 @481 -> 30/50 @960 (SearchBanner.tsx:104-118); children-row __footer (20px below) = shell limit */
+@media (min-width: 400px) { .tasty-search-banner { padding: 20px; } }
+@media (min-width: 481px) { .tasty-search-banner { padding: 30px 40px; } }
+@media (min-width: 960px) { .tasty-search-banner { padding: 30px 50px; } }
+
+/* ── LAYOUT: SplitScreen — SplitScreen.tsx. Pane padding 20px @>=961 (Pane/SecondaryPane).
+   Below 961 source is a JS overlay pane + 10px wildSand drag handle = shell limits;
+   kit statically stacks instead. 1px divider = kit affordance (source has none at desktop). ── */
+.tasty-split { display: grid; grid-template-columns: 1fr 1fr; gap: 0; min-height: 240px; }
+.tasty-split > * { padding: 20px; }
+.tasty-split > :first-child { border-right: 1px solid var(--border-color); }
+@media (max-width: 960px) { .tasty-split { grid-template-columns: 1fr; } .tasty-split > :first-child { border-right: 0; border-bottom: 1px solid var(--border-color); } }
+
+/* ── LAYOUT: Form / InputGroup grids — Form.tsx, InputGroup.tsx ── */
+.tasty-form { display: flex; flex-direction: column; gap: var(--space-md); }
+.tasty-fieldset { border: 1px solid var(--border-color); padding: var(--space-md); margin: 0; }
+.tasty-fieldset > legend { font-size: 16px; font-weight: var(--font-weight-semibold); color: var(--body-font-base); white-space: nowrap; display: flex; align-items: center; margin-bottom: 10px; padding: 0 var(--space-xs); }   /* StyledLegend: font 16/medium, body.base, nowrap, flex, margin-bottom 10 (Fieldset.tsx:54-61); kit keeps the legend padding as a visible-border affordance */
+/* InputGrid* shells: source renders FUSED groups (gap 0, 0 0 0 1px alto outer ring,
+   borderless inner fields w/ shared dividers — InputGridName.tsx:193-230 et al.);
+   the kit keeps a gapped grid of standalone .tasty-field children as its useful
+   generic model. Address 2-row pattern + InputGroupNameDOB = compose two grids. */
+.tasty-input-grid { display: grid; gap: var(--space-md); grid-template-columns: repeat(2, 1fr); }
+.tasty-input-grid.is-name { grid-template-columns: repeat(3, 1fr); }   /* First/Middle/Last — middle renders by default (InputGridName.tsx:40,132) */
+.tasty-input-grid.is-dob { grid-template-columns: repeat(3, 1fr); }
+@media (max-width: 480px) { .tasty-input-grid { grid-template-columns: 1fr; } }   /* source stacks below mediumMin 481 */
+
+/* ── CONTAINER: Accordion — Accordion.tsx ── */
+.tasty-accordion { border: 1px solid var(--border-color); }
+.tasty-accordion__head { display: flex; align-items: center; justify-content: space-between; gap: var(--space-sm); padding: 10px 14px; cursor: pointer; font-weight: var(--font-weight-semibold); background: var(--white-space-base); }
+.tasty-accordion__head i { transition: transform .15s ease; }
+.tasty-accordion.is-open .tasty-accordion__head i { transform: rotate(90deg); }
+.tasty-accordion__body { padding: 0 2rem var(--space-md); display: none; }   /* truth body padding sides = 2rem (transparent variant) */
+.tasty-accordion.is-open .tasty-accordion__body { display: block; }
+
+/* ── NAV: Pagination — Pagination.tsx ── */
+.tasty-pagination { display: inline-flex; align-items: center; gap: var(--space-xs); }
+/* Pagination.tsx: 40px square items, active = mineShaft (dark) bg + alabaster
+   text, disabled = mercury bg + emperor text. */
+.tasty-pagination__item { min-width: 40px; height: 40px; padding: 0 10px; display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--border-color); background: var(--white-space-base); color: var(--body-font-base); font-size: 13px; font-weight: var(--font-weight-bold); cursor: pointer; border-radius: var(--radius-sm); }
+.tasty-pagination__item.is-active { background: var(--body-font-base); border-color: var(--body-font-base); color: var(--white-space-z-index2); }
+.tasty-pagination__item.is-disabled { background: var(--white-space-z-index4); color: var(--body-font-weak); cursor: not-allowed; }
+
+/* ── DATA: MemberLogo / Avatar / PersonaIcon ── */
+.tasty-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; background: var(--white-space-z-index3); }
+/* PersonaIcon.tsx: 40px CIRCLE, bg brand2 (curiousBlue #1D8CCC), 1px alto border,
+   white glyph/initials. */
+.tasty-persona-icon { width: 40px; height: 40px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; background: var(--ph-brand2); border: 1px solid var(--border-color); color: var(--white); font-weight: var(--font-weight-bold); font-size: 13px; overflow: hidden; }   /* overflow:hidden clips a photo <img> to the circle */
+
+/* ── OVERLAY: PopOver — PopOver.tsx (light surface, border, pop shadow) ── */
+/* PopOver.tsx: 8px radius, fog surface, larger panel. */
+.tasty-popover { position: absolute; z-index: 50; min-width: 350px; max-width: 500px; min-height: 120px; max-height: 350px; overflow-y: auto; background: var(--white-space-z-index1); border: 1px solid var(--border-color); border-radius: var(--radius-lg); box-shadow: var(--shadow-pop); padding: 20px; font-size: 13px; line-height: 18px; }   /* PopOver.tsx: min 350/120, max 500/350; content padding 20, line-height 18 */
+.tasty-popover.has-sections { padding: 0; overflow: visible; }   /* use with __header/__content/__footer bands (edge-to-edge) */
+.tasty-popover__header { display: flex; align-items: center; justify-content: space-between; height: 40px; padding: 0 20px; background: var(--white-space-z-index3); border-bottom: 1px solid var(--border-color); border-radius: 8px 8px 0 0; font-weight: var(--font-weight-bold); }
+.tasty-popover__content { padding: 20px; font-size: 13px; line-height: 18px; overflow-y: auto; }
+.tasty-popover__footer { display: flex; align-items: center; justify-content: space-between; height: 50px; padding: 0 20px; background: var(--white-space-z-index3); border-radius: 0 0 8px 8px; }
+
+/* ── OVERLAY: Dropdown / OptionsMenu — Dropdown.tsx, OptionsMenu.tsx (shell) ── */
+/* Dropdown/OptionsMenu (DropdownOption.tsx): white surface, 5px radius, soft
+   shadow. Items are link-BLUE (deepCerulean), divided by 1px alto rules, and
+   hover FILLS deepCerulean with white text. */
+.tasty-menu { position: absolute; z-index: 50; min-width: 200px; max-height: 250px; background: var(--white-space-base); border: 1px solid var(--border-color); border-radius: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.15); padding: 0; overflow: hidden auto; }   /* max-height 250 + scroll (SelectPopover) */
+.tasty-menu__item { display: flex; align-items: center; gap: var(--space-sm); padding: 0.875em; line-height: 1.5; font-size: 13px; cursor: pointer; color: var(--action-default); border-top: 1px solid var(--border-color); }   /* DropdownOption padding .875em, line-height 1.5 */
+.tasty-menu__item.is-selected { background: var(--validation-base-focus); box-shadow: inset 50px 1px 0 -43px var(--anakiwa); color: var(--body-font-base); }   /* [aria-selected]: catskillWhite bg + anakiwa left bar */
+.tasty-menu__item:first-child { border-top: 0; }
+.tasty-menu__item:hover, .tasty-menu__item[data-focused="true"], .tasty-menu__item.is-focused { background: var(--action-default); color: var(--white); }   /* hover == keyboard data-focused: deepCerulean fill + neutral/white */
+.tasty-menu__item.is-danger { color: var(--context-error); }
+.tasty-menu__item.is-danger:hover { background: var(--context-error); color: var(--white); }
+.tasty-menu__item.is-disabled { background: var(--border-color); color: var(--body-font-disabled); font-weight: 300; cursor: not-allowed; }   /* truth: alto bg, emperor text, weight 300 */
+.tasty-menu__item.is-disabled:hover { background: var(--border-color); color: var(--body-font-disabled); }
+.tasty-menu__divider { border-top: 1px solid var(--border-color); }
+.tasty-kebab { display: inline-flex; flex-direction: column; gap: 3px; padding: 8px; background: none; border: 0; cursor: pointer; border-radius: var(--radius-sm); }
+.tasty-kebab span { width: 4px; height: 4px; border-radius: 50%; background: var(--body-font-weak); }
+.tasty-kebab:hover { background: var(--white-space-z-index2); }
+
+/* ── OVERLAY: SearchInput results — SearchInput.tsx (shell) ── */
+.tasty-search { position: relative; display: inline-flex; align-items: center; width: 100%; }
+.tasty-search .tasty-input { padding-left: 34px; }
+.tasty-search__icon { position: absolute; left: 10px; color: var(--body-font-weak); display: inline-flex; pointer-events: none; }
+.tasty-search__results { position: absolute; top: 44px; left: 0; right: 0; z-index: 50; background: var(--white-space-base); border: 1px solid var(--border-color); border-radius: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.15); max-height: 250px; overflow: auto; }   /* mirror .tasty-menu surface: radius 5, getBoxShadow('below'), max-height 250 */
+.tasty-search__result { padding: 0.875em; font-size: 13px; cursor: pointer; color: var(--action-default); border-top: 1px solid var(--border-color); }   /* DropdownOption rows: .875em, action-default text, divider */
+.tasty-search__result:first-child { border-top: 0; }
+.tasty-search__result:hover { background: var(--action-default); color: var(--white); }   /* data-focused: deepCerulean fill + white (DropdownOption) */
+/* SearchInput input is .tasty-input (already responsive); only the results dropdown offset tracks the taller input at >=961 */
+@media (min-width: 961px) { .tasty-search__results { top: 54px; } }
+
+/* ── OVERLAY: Modal — Modal.tsx. Centered, sharp, pop shadow, overlay .5 ── */
+/* Modal.tsx: backdrop is a blur (not a heavy dim); surface fog (#FCFCFC), square
+   corners, shadow 0 5px 10px rgba(0,0,0,.25), max-width 760. */
+.tasty-modal-overlay { position: fixed; inset: 0; z-index: 100; background: rgba(0,0,0,0.15); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); display: flex; align-items: center; justify-content: center; padding: var(--space-lg); }
+.tasty-modal { background: var(--white-space-z-index1); width: 100%; max-width: 760px; border: 1px solid var(--border-color); box-shadow: 0 5px 10px rgba(0,0,0,0.25); display: flex; flex-direction: column; max-height: 90vh; animation: tasty-modal-in .2s ease-out; }   /* withBorder default = true (1px alto) */
+@keyframes tasty-modal-in { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+.tasty-modal__head { display: flex; align-items: center; justify-content: space-between; padding: 10px 16px; border-bottom: 1px solid var(--border-color); }   /* ModalTitle padding 10px 16px */
+.tasty-modal__title { font-size: 20px; font-weight: var(--font-weight-bold); color: var(--body-font-strong); }   /* ModalTitle font-size 20px (was 2rem) */
+.tasty-modal__x { background: none; border: 0; cursor: pointer; font-size: 22px; line-height: 1; color: var(--body-font-weak); }
+.tasty-modal__body { padding: 10px; overflow: auto; }   /* ModalBody 10px <480 -> 40px >=480 */
+@media (min-width: 480px) { .tasty-modal__body { padding: 40px; } }
+.tasty-modal__foot { display: flex; justify-content: flex-end; gap: var(--space-sm); padding: var(--space-md) var(--space-lg); border-top: 1px solid var(--border-color); }
+
+/* ── OVERLAY: Toast — ToastProvider.tsx. Top-right slide-in, status colors ── */
+.tasty-toast-stack { position: fixed; top: var(--space-md); right: var(--space-md); z-index: 200; display: flex; flex-direction: column; gap: var(--space-sm); }
+/* Toast — default backgroundStyle = FROSTED: alabaster surface + emperor border/text,
+   weight 600 (ToastNotification.tsx). Context variants = SOLID: light status-tint bg +
+   saturated foreground text/border per status.base/foreground (5 contexts). */
+.tasty-toast { display: flex; align-items: center; gap: var(--space-sm); min-width: 280px; max-width: 380px; padding: 5px 10px; background: var(--white-space-z-index2); color: var(--body-font-weak); border: 1px solid var(--body-font-weak); border-radius: 5px; font-weight: var(--font-weight-semibold); box-shadow: 0 4px 4px rgba(0,0,0,0.15); animation: tasty-toast-in .25s ease-out; }
+@keyframes tasty-toast-in { from { opacity: 0; transform: translateX(12px); } to { opacity: 1; transform: none; } }
+.tasty-toast.is-success { background: var(--status-base-2); color: var(--status-foreground-2); border-color: var(--status-foreground-2); }
+.tasty-toast.is-warning { background: var(--status-base-5); color: var(--status-foreground-5); border-color: var(--status-foreground-5); }
+.tasty-toast.is-error { background: var(--status-base-3); color: var(--status-foreground-3); border-color: var(--status-foreground-3); }
+.tasty-toast.is-primary, .tasty-toast.is-config { background: var(--status-base-1); color: var(--status-foreground-1); border-color: var(--status-foreground-1); }
+.tasty-toast.is-note { background: var(--status-base-4); color: var(--status-foreground-4); border-color: var(--status-foreground-4); }
+.tasty-toast__x { margin-left: auto; background: none; border: 0; color: inherit; cursor: pointer; opacity: .8; }
+
+/* ── DATA: Stepper (the APPLICATION TRACKER) — Stepper.tsx. Status-driven,
+      read-only: pending / active / done / denied (Tasty status = upcoming /
+      current / complete / denied). Vanilla port of the shared/stepper-handoff
+      spec. NOTE: Tasty's *ProgressTracker* is a DIFFERENT component — a
+      clickable ≤4-step wizard nav (completed/active/incomplete, onClick) — and
+      is NOT built here. Don't conflate the two. ── */
+.tasty-stepper { display: flex; gap: 0; }
+.tasty-stepper.is-vertical { flex-direction: column; }
+.tasty-stepper__step { flex: 1; display: flex; flex-direction: column; align-items: center; gap: var(--space-xs); position: relative; text-align: center; }
+.tasty-stepper.is-vertical .tasty-stepper__step { flex-direction: row; align-items: flex-start; text-align: left; }
+.tasty-stepper__node { width: 30px; height: 30px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; font-weight: var(--font-weight-bold); background: var(--border-color); color: var(--white); flex: none; z-index: 1; }
+.tasty-stepper__lbl { font-size: 13px; color: var(--body-font-base); }
+.tasty-stepper__meta { font-size: 13px; color: var(--body-font-weak); }
+.tasty-stepper__step.is-active .tasty-stepper__node { background: var(--status-base-4); border: 1px solid var(--border-color); color: var(--status-foreground-4); }
+.tasty-stepper__step.is-done .tasty-stepper__node { background: var(--context-success); }
+.tasty-stepper__step.is-done .tasty-stepper__lbl { color: var(--context-success); }
+.tasty-stepper__step.is-denied .tasty-stepper__node { background: var(--context-error); }
+.tasty-stepper__step.is-denied .tasty-stepper__lbl { color: var(--context-error); }
+/* connector */
+.tasty-stepper__step:not(:last-child)::after { content: ""; position: absolute; background: var(--border-color); }
+.tasty-stepper:not(.is-vertical) .tasty-stepper__step:not(:last-child)::after { top: 15px; left: 50%; width: 100%; height: 2px; }
+.tasty-stepper.is-vertical .tasty-stepper__step:not(:last-child)::after { left: 15px; top: 30px; width: 2px; height: 100%; }
+.tasty-stepper__step.is-done::after { background: var(--context-success); }
+
+
+/* ════════════════════════════════════════════════════════════════════
+   COMPLETE-CENSUS LAYER — the remaining Tasty components, source-verified
+   against tastysoft v5.56.1. Shells (heavy composites) are marked.
+   ════════════════════════════════════════════════════════════════════ */
+
+/* ═══════════════ NAV & SEGMENTED ═══════════════ */
+
+/* NavToggle — navToggleConstants: pill container alabaster + 1px alto, radius 24,
+   4px pad, 10px gap. Segments transparent; ACTIVE fills tealBlue + near-white;
+   HOVER fills deepCerulean. Optional count badge (solid grey → white-on-active). */
+.tasty-navtoggle { display: inline-flex; width: fit-content; align-self: flex-start; gap: 10px; padding: 4px; margin: 0; list-style: none; background: var(--white-space-z-index2); border: 1px solid var(--border-color); border-radius: 24px; }   /* hugs content — inline-flex alone stretches edge-to-edge in a flex-column parent */
+.tasty-navtoggle__item { display: inline-flex; align-items: center; gap: 6px; justify-content: center; padding: 8px 14px; border: 0; border-radius: 24px; background: transparent; color: var(--body-font-base); font-family: var(--font-family-base); font-size: 13px; white-space: nowrap; cursor: pointer; }
+.tasty-navtoggle__item:hover { background: var(--action-default); color: var(--white-space-z-index1); }   /* fg = whiteSpace.zIndex1 (fog default / black dark), NOT literal white — NavToggle.tsx :hover */
+.tasty-navtoggle__item:hover .tasty-badge { background: var(--white-space-base); color: var(--context-bold); border-color: var(--white-space-base); }   /* badge flips to ghost on hover (NavToggle.tsx [data-nav-badge]) */
+.tasty-navtoggle__item:focus-visible { outline: 4px solid var(--focus-ring); outline-offset: 2px; }   /* latent: kit renders li */
+.tasty-navtoggle__item.is-active { background: var(--action-active); color: var(--white-space-z-index1); }
+.tasty-navtoggle__item.is-active .tasty-badge { background: var(--context-neutral); color: var(--context-bold); border-color: transparent; }   /* active badge = ghost: bg colorContext.neutral, text colorContext.bold */
+/* responsive: item font 13 (small,<961) -> 16 (medium,>=961) */
+@media (min-width: 961px) { .tasty-navtoggle__item { font-size: 16px; } }
+
+/* OptionButtonList — row of circular radio cards. Circle alabaster + soft shadow;
+   selected = white + 1px basil border + check badge; hover = gradient fill. */
+.tasty-optionbtn-list { display: flex; gap: 24px; flex-wrap: wrap; }
+.tasty-optionbtn { display: inline-flex; flex-direction: column; align-items: center; gap: 12px; width: 150px; text-align: center; cursor: pointer; }
+.tasty-optionbtn__circle { position: relative; width: 100px; height: 100px; border-radius: 50%; background: var(--white-space-z-index2); box-shadow: 0 0 20px var(--dustyGray); display: inline-flex; align-items: center; justify-content: center; font-size: 40px; color: var(--action-default); transition: box-shadow .15s ease; }
+.tasty-optionbtn:hover .tasty-optionbtn__circle { background: var(--action-hover-primary); color: var(--white); box-shadow: 0 0 10px 3px var(--action-default); }
+.tasty-optionbtn.is-selected .tasty-optionbtn__circle { background: var(--white-space-base); border: 1px solid var(--context-success); box-shadow: none; }
+.tasty-optionbtn__check { position: absolute; top: -1px; right: -6px; width: 30px; height: 30px; border-radius: 50%; border: 3px solid var(--white); background: var(--white-space-base); color: var(--context-success); display: none; align-items: center; justify-content: center; font-size: 16px; }   /* truth badge = white circle + green check (NOT green fill + white check) */
+.tasty-optionbtn.is-selected .tasty-optionbtn__check { display: inline-flex; }
+.tasty-optionbtn__title { font-size: 16px; font-weight: var(--font-weight-semibold); color: var(--action-default); }   /* unselected = deepCerulean (OptionButtonWrapper base color) */
+.tasty-optionbtn.is-selected .tasty-optionbtn__title { color: var(--context-success); }
+.tasty-optionbtn__desc { font-size: 13px; color: var(--action-default); }
+.tasty-optionbtn.is-selected .tasty-optionbtn__desc { color: var(--context-success); }   /* selected wrapper color = basil */
+
+/* ViewController — underlined UPPERCASE bold text tabs. Responsive: gap 30/40/50, min-height 40/45/50 across 481/961 (ComponentWrapper). Tab inherits Anchor scale (font 13→16 @961). */
+.tasty-viewtabs { display: flex; align-items: flex-end; gap: 30px; min-height: 40px; border-bottom: 1px solid var(--border-color); }
+@media (min-width: 481px) { .tasty-viewtabs { gap: 40px; min-height: 45px; } }
+@media (min-width: 961px) { .tasty-viewtabs { gap: 50px; min-height: 50px; } }
+.tasty-viewtab { position: relative; background: none; border: 0; padding: 0 0 8px; text-transform: uppercase; font-weight: var(--font-weight-bold); font-size: 13px; color: var(--action-default); cursor: pointer; }
+@media (min-width: 961px) { .tasty-viewtab { font-size: 16px; } }
+.tasty-viewtab::after { content: ""; position: absolute; left: 0; bottom: -1px; width: 100%; border-bottom: .25em solid transparent; transition: border-bottom-width .1s ease-in-out; }   /* truth: ::after animates border-bottom-width 0.1s */
+.tasty-viewtab:hover::after { border-bottom-color: currentColor; }
+.tasty-viewtab.is-active { color: var(--action-active); }
+.tasty-viewtab.is-active::after { border-bottom-color: var(--action-active); }
+.tasty-viewtab.is-disabled { color: var(--body-font-weak); cursor: not-allowed; }   /* truth: body.weak (emperor), not-allowed */
+.tasty-viewtab.is-disabled:hover::after { border-bottom-color: transparent; }        /* disabled shows no hover underline */
+
+/* Navbar — app bar fog + soft shadow; uppercase 700 links, active underline. */
+.tasty-navbar { display: flex; align-items: flex-end; height: 50px; padding: 0 50px; gap: 40px; background: var(--white-space-z-index1); box-shadow: 0 1px 5px var(--dustyGray); }   /* NavContainer 50 <960 -> 60 >=960 */
+@media (min-width: 960px) { .tasty-navbar { height: 60px; } }
+.tasty-navbar__link { position: relative; align-self: flex-end; padding-bottom: 8px; text-transform: uppercase; font-weight: var(--font-weight-bold); color: var(--action-default); text-decoration: none; cursor: pointer; }
+.tasty-navbar__link::after { content: ""; position: absolute; left: 0; bottom: 0; width: 100%; border-bottom: 0 solid currentColor; transition: border-bottom-width .1s ease; }
+.tasty-navbar__link:hover::after, .tasty-navbar__link.is-active::after { border-bottom-width: .25em; }
+.tasty-navbar__link.is-active { color: var(--action-active); }
+.tasty-navbar__link.is-disabled { color: var(--body-font-weak); cursor: not-allowed; }
+.tasty-navbar__link.is-disabled:hover::after { border-bottom-width: 0; }   /* disabled = emperor, no hover underline */
+
+/* HamburgerMenu — 50x50 button + slide-down panel. */
+.tasty-hamburger { width: 50px; height: 50px; padding: 16px; background: var(--white-space-z-index3); border: 0; color: var(--action-default); font-size: 22px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; }   /* MenuButton padding 16 (was 14) */
+.tasty-hamburger:hover { background: var(--action-default); color: var(--white); }
+.tasty-hamburger-menu { width: 280px; background: var(--white-space-z-index3); border: 1px solid var(--border-color); }
+.tasty-hamburger-menu__item { display: flex; align-items: center; justify-content: space-between; height: 60px; padding: 10px 20px; background: var(--white-space-z-index2); border-bottom: 1px solid var(--border-color); text-transform: uppercase; font-weight: var(--font-weight-bold); color: var(--action-default); cursor: pointer; }
+.tasty-hamburger-menu__item.is-active { background: var(--validation-base-focus); color: var(--body-font-highlight); box-shadow: inset 50px 1px 0 -43px var(--anakiwa); }
+.tasty-hamburger-menu__item:hover { background: var(--action-hover-primary); color: var(--white); padding-left: 30px; }   /* Item:hover left-indent slide 20->30 */
+.tasty-hamburger-menu__item.is-disabled { background: var(--border-color); color: var(--body-font-disabled); font-weight: 300; cursor: not-allowed; }   /* truth: alto bg, emperor text, weight light */
+.tasty-hamburger-menu__item.is-disabled:hover { background: var(--border-color); color: var(--body-font-disabled); }
+
+/* SectionHeaderTitle — graphic + title + subtitle row. */
+.tasty-section-header { display: flex; align-items: center; gap: 10px; width: 100%; }
+.tasty-section-header.has-border { padding-bottom: 10px; margin-bottom: 1rem; border-bottom: 1px solid var(--border-color); }
+.tasty-section-header__graphic { flex: none; width: 20px; height: 20px; display: inline-flex; align-items: center; justify-content: center; font-size: 16px; color: var(--action-default); }
+.tasty-section-header__title { font-size: 20px; font-weight: var(--font-weight-bold); color: var(--body-font-strong); }
+.tasty-section-header__sub { font-size: 13px; font-weight: var(--font-weight-semibold); color: var(--body-font-weak); }
+/* responsive: medium scale at >=961 — title 20->25, graphic 20->50 (icon 16->40), gap 10->15 (SECTION_HEADER_*_BY_SCALE) */
+@media (min-width: 961px) {
+  .tasty-section-header { gap: 15px; }
+  .tasty-section-header__graphic { width: 50px; height: 50px; font-size: 40px; }
+  .tasty-section-header__title { font-size: 25px; }
+}
+
+/* ═══════════════ DISPLAY & DATA ═══════════════ */
+
+/* Heading — Heading.tsx: weight 400 (light) by default; sizes h1 40 → h6 13. */
+.tasty-heading { font-family: var(--font-family-base); font-weight: var(--font-weight-regular); line-height: 1.25; color: var(--body-font-base); margin: 0; }
+.tasty-heading.is-1 { font-size: 40px; }   /* truth level defaults (was 1.6x oversized: 64/48/40/32/25.6/20.8) */
+.tasty-heading.is-2 { font-size: 30px; }
+.tasty-heading.is-3 { font-size: 25px; }
+.tasty-heading.is-4 { font-size: 20px; }
+.tasty-heading.is-5 { font-size: 16px; }
+.tasty-heading.is-6 { font-size: 13px; }
+
+/* DescriptionList — DescriptionRow.tsx: term:definition rows, 1:2 ratio. */
+.tasty-dl { margin: 0; padding: 0; }
+.tasty-dl__row { display: flex; gap: 10px; padding: 20px 10px; border-top: 1px solid var(--border-color); box-sizing: border-box; }   /* mobile padding 20px 10px / gap 10 */
+.tasty-dl__row:last-child { border-bottom: 1px solid var(--border-color); }
+.tasty-dl__row:hover { background: var(--white-space-z-index2); }
+.tasty-dl__term { flex: 1; margin: 0; font-weight: var(--font-weight-regular); color: var(--body-font-weak); }
+.tasty-dl__desc { flex: 2; margin: 0; font-weight: var(--font-weight-semibold); color: var(--body-font-base); }
+@media (min-width: 961px) { .tasty-dl__row { padding: 10px 20px; gap: 20px; } }   /* StyledRow flips to 10px 20px / gap 20 at >=mediumMax (DescriptionRow.tsx:108,116-118) */
+
+/* DynamicDataBlock — big-number stat (the HeroPanel child, standalone).
+   Root mirrors WorkspaceCard sizing: 280-480/pad 10 -> 360-540/pad 20 30 @1280
+   (DynamicDataBlock.tsx:112-123); value = Content light 40 -> 56 @961 (stories). */
+.tasty-data-block { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 10px; min-width: 280px; max-width: 480px; background: var(--white-space-base); }
+.tasty-data-block__label { text-transform: uppercase; font-weight: 300; color: var(--body-font-base); font-size: 16px; }   /* Content medium 16, light, body.base (DynamicDataBlock.tsx:53-60) */
+.tasty-data-block__value { font-size: 40px; font-weight: 300; color: var(--body-font-base); line-height: 1.1; }
+.tasty-data-block__desc { font-size: 13px; color: var(--body-font-base); }   /* Content size=small, default body.base (DynamicDataBlock.tsx:91-99) */
+@media (min-width: 961px) { .tasty-data-block__value { font-size: 56px; } }
+@media (min-width: 1280px) { .tasty-data-block { padding: 20px 30px; min-width: 360px; max-width: 540px; } }
+
+/* Anchor — Anchor.tsx: deepCerulean, weight 400, NO underline (even on hover). Responsive font 13→16 @961 (FONT_SIZES via SMALLER map). :focus-visible = 4px focusRing. */
+.tasty-anchor { color: var(--action-default); font-weight: var(--font-weight-regular); font-size: 13px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; cursor: pointer; }
+.tasty-anchor:hover { text-decoration: none; }
+.tasty-anchor:focus-visible { outline: 4px solid var(--focus-ring); outline-offset: 4px; }
+@media (min-width: 961px) { .tasty-anchor { font-size: 16px; } }
+
+/* Image — Image.tsx: block, optional 1px alto border. */
+.tasty-image { display: block; box-sizing: border-box; max-width: 100%; }
+.tasty-image.has-border { border: 1px solid var(--border-color); }
+
+/* ═══════════════ FORM (composite) ═══════════════ */
+
+/* InputPhone — joined country-code + number pill. */
+.tasty-input-phone { display: flex; align-items: stretch; width: 290px; height: 40px; border: 1px solid var(--border-color); border-radius: var(--radius-md); background: var(--white-space-base); overflow: hidden; }
+/* InputPhone: radius 4->5 at >=961 (radius is responsive via SMALLER map; height left at 40 pending source confirm) */
+@media (min-width: 961px) { .tasty-input-phone { height: 50px; border-radius: 5px; } .tasty-input-phone input { font-size: 16px; } }   /* inner Dropdown+TextField are responsive: 40→50, font 13→16 */
+.tasty-input-phone__code { flex: none; width: 70px; display: flex; align-items: center; justify-content: center; border-right: 1px solid var(--border-color); font-weight: 600; color: var(--body-font-strong); }
+.tasty-input-phone input { flex: 1; border: 0; outline: 0; padding: 0 12px; background: transparent; font-family: var(--font-family-base); font-size: 13px; }
+
+/* DatePicker — closed trigger: value + right calendar glyph. */
+.tasty-datepicker { display: flex; align-items: center; gap: 8px; height: 40px; padding: 0 12px; border: 1px solid var(--border-color); border-radius: var(--radius-md); background: var(--white-space-base); cursor: pointer; }
+.tasty-datepicker__value { flex: 1; font-size: 13px; font-weight: 700; color: var(--body-font-strong); }
+.tasty-datepicker.is-empty .tasty-datepicker__value { font-weight: 500; color: var(--body-font-weak); }
+.tasty-datepicker__icon { color: var(--action-default); }
+/* responsive (DatePicker trigger = TextField FieldWrapper): height 40->50, radius 4->5, value font 13->16 */
+@media (min-width: 961px) { .tasty-datepicker { height: 50px; border-radius: 5px; } .tasty-datepicker__value { font-size: 16px; } }
+
+/* InputGroup — 7px left accent gutter + wrapped fields + message. */
+.tasty-input-group { border-left: 7px solid transparent; padding-left: var(--space-md); }
+.tasty-input-group.is-error { border-left-color: var(--context-error); }
+.tasty-input-group.is-valid { border-left-color: var(--context-success); }
+.tasty-input-group__fields { display: flex; flex-wrap: wrap; gap: 10px; }
+.tasty-input-group__msg { margin-top: var(--space-sm); font-size: 13px; color: var(--body-font-weak); }
+.tasty-input-group.is-error .tasty-input-group__msg { color: var(--context-error); }
+.tasty-input-group.is-valid .tasty-input-group__msg { color: var(--context-success); }   /* truth: success msg = colorContext.success (basil) */
+
+/* ListCheckbox — labeled stack of checkbox rows (uses .tasty-checkbox). */
+.tasty-list-checkbox { display: flex; flex-direction: column; gap: 10px; }   /* FlexContainer default gap 10px (FlexContainer.tsx:18) */
+.tasty-list-checkbox.is-horizontal { flex-direction: row; gap: 10px; }
+.tasty-list-checkbox__controls { display: flex; gap: 10px; padding-bottom: 10px; }   /* controls FlexContainer padding 0 0 10px, gap 10 (ListCheckbox.tsx:168) */
+.tasty-list-checkbox__controls a { color: var(--action-default); font-size: 13px; cursor: pointer; }
+
+/* ═══════════════ OVERLAYS (PersonaMenu panel) ═══════════════ */
+/* PersonaMenu — open dropdown panel: 350px, wildSand rows, gradient hover.
+   __header = deepCerulean persona trigger band (PersonaMenuHeader.tsx); items =
+   standard rows (PersonaMenuItem.tsx); .is-signout = centered alabaster footer. */
+.tasty-persona-menu { width: 350px; background: var(--white-space-z-index3); box-shadow: 0 0 9px var(--dustyGray); border-radius: 5px; overflow: hidden; }   /* radius 5px all corners (header tops + last-item bottoms clipped by overflow:hidden) */
+.tasty-persona-menu__header { display: flex; align-items: center; gap: 10px; height: 60px; padding: 0 14px; background: var(--c-brand); border: 1px solid var(--curiousBlue); color: var(--white); }   /* ComponentWrapper: brand1 bg, brand2 border, h60 @>=961 (PersonaMenuHeader.tsx:107-139) */
+.tasty-persona-menu__greeting, .tasty-persona-menu__org { font-size: 13px; font-weight: 400; line-height: 16px; color: var(--wildSand); }   /* brand.base */
+.tasty-persona-menu__name { font-size: 13px; font-weight: 700; line-height: 16px; color: var(--white); }   /* brand.strong */
+.tasty-persona-menu__item { display: flex; align-items: center; gap: 10px; height: 60px; padding: 0 10px; background: var(--white-space-z-index3); border-top: 1px solid var(--border-color); color: var(--action-default); font-weight: 600; font-size: 16px; cursor: pointer; }   /* padding 0 10px (MenuItemWrapper:153) */
+.tasty-persona-menu__item:first-child { border-top: 0; }
+.tasty-persona-menu__item:hover, .tasty-persona-menu__item:focus { background: var(--action-hover-primary); color: var(--white); }   /* hover==focus gradient (PersonaMenuItem.tsx:205-214) */
+.tasty-persona-menu__item:focus-visible { outline: 4px solid var(--focus-ring); outline-offset: -3px; }   /* :focus-visible:not(:hover) ring, latent (PersonaMenuItem.tsx:196-199) */
+.tasty-persona-menu__item.is-disabled { background: var(--border-color); color: var(--body-font-disabled); font-style: italic; cursor: not-allowed; }   /* [aria-disabled]: alto bg, body.disabled italic (PersonaMenuItem.tsx:166-176) */
+.tasty-persona-menu__item.is-signout { flex-direction: column; justify-content: center; height: auto; padding: 10px 20px 30px; background: var(--white-space-z-index2); color: var(--action-default); font-weight: 700; font-size: 20px; text-align: center; }   /* signOut footer (PersonaMenuItem.tsx:148-164, MenuText:138) */
+
+/* ═══════════════ PARCHMENT WORKFLOWS (cosmetic shells) ═══════════════ */
+
+/* Dropzone — dashed drop target + upload prompt + file-type chips. */
+.tasty-dropzone { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; min-height: 130px; padding: 15px; background: var(--white-space-z-index1); border: 1px dashed var(--border-color); text-align: center; cursor: pointer; }
+.tasty-dropzone:hover { background: var(--white-space-z-index3); border-color: var(--dustyGray); }   /* :active state: wildSand bg + dashed theme.boxShadow=dustyGray (Dropzone.tsx:544-547); kit shows it on hover */
+.tasty-dropzone__icon { font-size: 24px; color: var(--action-default); }
+.tasty-dropzone__prompt { font-size: 20px; font-weight: 600; color: var(--action-default); }
+.tasty-dropzone__hint { font-size: 16px; color: var(--body-font-weak); }   /* FILE_SIZE_FONT.medium=16 (dropzoneConstants.ts:18) */
+.tasty-dropzone__types { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; }
+.tasty-dropzone__type { padding: 1px 8px; background: var(--white-space-z-index3); border: 1px solid var(--border-color); border-radius: 2px; font-size: 10px; font-weight: 600; }
+
+/* FilePreview — framed document panel (toolbar + body + footer). Container =
+   non-embedded mode: 1px alto border + 0 0 8px dustyGray shadow + dark
+   rgba(0,0,0,.7) viewer surround (FilePreview.tsx FilePreviewContainer);
+   footer strip = the Pagination bar's styling (source puts it in the header). */
+.tasty-file-preview { display: flex; flex-direction: column; border: 1px solid var(--border-color); box-shadow: 0 0 8px var(--dustyGray); background: var(--white-space-base); }
+.tasty-file-preview__bar { display: flex; align-items: center; justify-content: space-between; padding: 10px 20px; background: var(--white-space-z-index2); border-bottom: 1px solid var(--border-color); font-weight: 600; }
+.tasty-file-preview__body { flex: 1; min-height: 160px; display: flex; align-items: center; justify-content: center; background: rgba(0, 0, 0, 0.7); color: var(--white); }   /* dark lightbox surround — hardcoded rgba in source, theme-independent */
+.tasty-file-preview__foot { height: 40px; display: flex; align-items: center; justify-content: center; font-size: 13px; background: var(--white-space-z-index2); border-top: 1px solid var(--border-color); }
+
+/* ManageEntity — CRUD entity card: header row + label/value grid. Root: shaded
+   bg + 4 borders + 20px 40px + width cap 860 (ManageEntity.tsx:107-110, WIDTH_MAP
+   medium); id = 20px body.base (FONT_SIZES.large / FONTSIZE_MAP medium); grid =
+   3 cols (learner ctx) gap 10 (InfoGrid). member-ctx 2-col + edit buttons = shell limits. */
+.tasty-manage-entity { background: var(--white-space-z-index2); border: 1px solid var(--border-color); padding: 20px 40px; width: 100%; max-width: 860px; box-sizing: border-box; }
+.tasty-manage-entity__head { display: flex; align-items: center; justify-content: space-between; padding-bottom: var(--space-lg); border-bottom: 1px solid var(--border-color); }
+.tasty-manage-entity__id { font-size: 20px; color: var(--body-font-base); }
+.tasty-manage-entity__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding-top: 1em; margin: 0; }
+.tasty-manage-entity__grid dt { font-weight: 600; color: var(--body-font-strong); font-size: 16px; }   /* InfoTitle: Content semibold medium 16, body.strong (ManageEntity.tsx:97,225) */
+.tasty-manage-entity__grid dd { margin: 0; color: var(--body-font-base); }
+
+/* MemberSelectContainer — member cards: column gap 20 pad 1em -> 2-col grid @961
+   (MemberSelectContainer.tsx Grid). Card logo box = compose .tasty-member-logo;
+   isBackgroundShaded fog variant = shell limit. */
+.tasty-member-select { display: flex; flex-direction: column; gap: 20px; padding: 1em; }
+.tasty-member-select__card { display: flex; flex-direction: column; gap: var(--space-sm); padding: var(--space-xl); background: var(--white-space-base); border: 1px solid var(--border-color); }
+@media (min-width: 961px) { .tasty-member-select { display: grid; grid-template-columns: 1fr 1fr; } }
+
+/* SearchBulk — collapsible bulk-search block. */
+.tasty-search-bulk { background: var(--white-space-z-index2); padding: 20px; }   /* SEARCH_BULK_PADDING_MAP.medium=20 (searchBulkConstants.tsx:19-23) */
+.tasty-search-bulk__bar { display: flex; align-items: center; justify-content: space-between; cursor: pointer; font-size: 20px; font-weight: var(--font-weight-bold); }   /* truth: title = Content bold(700) @ medium fontSize 20 (was 600, no size) */
+.tasty-search-bulk__body { margin-top: var(--space-md); display: none; flex-direction: column; gap: var(--space-sm); }
+.tasty-search-bulk.is-open .tasty-search-bulk__body { display: flex; }
+
+/* ConsentCapture — Draw/Type tabs + signature canvas + Clear. */
+.tasty-consent__tabs { display: flex; gap: var(--space-lg); }
+.tasty-consent__tab { position: relative; background: none; border: 0; padding: 5px 0; font-weight: 700; color: var(--action-default); cursor: pointer; }
+.tasty-consent__tab.is-active { color: var(--action-active); }
+.tasty-consent__tab:focus-visible { outline: 4px solid var(--focus-ring); outline-offset: 4px; }   /* matches tasty-focus-ring global (focusRing token, offset 4) */
+.tasty-consent__tab.is-active::after { content: ""; position: absolute; left: 0; bottom: 0; width: 100%; border-bottom: .25em solid var(--action-active); }
+.tasty-consent__canvas { position: relative; margin-top: var(--space-md); width: 100%; aspect-ratio: 4 / 1; min-height: 130px; border: 1px solid var(--border-color); background: var(--white-space-base); display: flex; align-items: flex-end; justify-content: flex-end; padding: var(--space-sm); }   /* min-height: flex+aspect-ratio doesn't propagate height to the parent (tastysoft uses an SVG, which does) — without it following content overlaps */
+.tasty-consent__canvas::after { content: ""; position: absolute; left: 16px; right: 80px; bottom: 28px; border-bottom: 1px solid var(--c-border-strong); }   /* stops short of the Clear button */
+
+/* Workflow / WorkflowContainer — centered 760 panel, header + footer strips. */
+.tasty-workflow { max-width: 760px; margin: 0 auto; background: var(--white-space-base); border: 1px solid var(--border-color); }
+.tasty-workflow__head { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; padding: 10px; background: var(--white-space-z-index3); border-bottom: 1px solid var(--border-color); font-weight: 700; font-size: 16px; text-transform: capitalize; }   /* WorkflowHeader: font 16, capitalize (Workflow.tsx:144-145) */
+.tasty-workflow__title { text-align: center; }
+.tasty-workflow__body { padding: var(--space-lg); }
+.tasty-workflow__foot { display: flex; justify-content: center; gap: var(--space-md); padding: var(--space-xl); background: var(--white-space-z-index2); border-top: 1px solid var(--border-color); }
+
+/* ═══════════════ LAYOUT & A11Y UTILITIES ═══════════════ */
+.tasty-flex { display: flex; gap: var(--space-md); }
+.tasty-flex.is-column { flex-direction: column; }
+.tasty-grid { display: grid; gap: var(--space-md); }
+.tasty-content { color: var(--body-font-base); font-family: var(--font-family-base); font-size: 16px; line-height: 1.25; font-weight: var(--font-weight-regular); }   /* truth: medium 16 / line-height 1.25em / weight 400 (was 13 / 1.8) */
+.tasty-content.is-sm { font-size: 13px; }   /* small scale */
+.tasty-content.is-lg { font-size: 20px; }   /* large scale */
+.tasty-content.is-loose { line-height: 1.75; }   /* loose prop = 1.75em */
+.tasty-layout { display: flex; flex-direction: column; justify-content: space-between; min-height: 100vh; width: 100%; margin: 0; background: var(--white-space-base); }   /* FlexedLayout: space-between (sticky footer), width 100%, page bg (Layout.tsx:142-149) */
+.tasty-sr-only, .tasty-live-region { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+/* ProgressTracker — ProgressTracker.tsx: the CLICKABLE ≤4-step wizard nav
+   (completed / active / incomplete) — distinct from Stepper (the read-only
+   denial-aware tracker). Completed steps are actionable (jump back). */
+.tasty-progress-tracker { display: flex; align-items: flex-start; }
+.tasty-progress-tracker__step { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; position: relative; text-align: center; }
+.tasty-progress-tracker__node { width: 30px; height: 30px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; font-weight: var(--font-weight-bold); border: 2px solid var(--body-font-weak); background: var(--white-space-z-index3); color: var(--body-font-weak); z-index: 1; }   /* upcoming: wildSand bg + emperor border (truth) */
+.tasty-progress-tracker__lbl { font-size: 13px; font-weight: var(--font-weight-semibold); color: var(--body-font-weak); }   /* non-active label weight 600 (truth) */
+.tasty-progress-tracker__step.is-completed .tasty-progress-tracker__node { background: var(--action-default); border-color: var(--action-default); color: var(--white); cursor: pointer; }
+.tasty-progress-tracker__step.is-completed .tasty-progress-tracker__lbl { color: var(--action-default); cursor: pointer; }
+.tasty-progress-tracker__step.is-active .tasty-progress-tracker__node { border-color: var(--action-active); color: var(--action-active); }   /* active = tealBlue (truth) */
+.tasty-progress-tracker__step.is-active .tasty-progress-tracker__lbl { color: var(--action-active); font-weight: var(--font-weight-bold); }
+.tasty-progress-tracker__step:not(:last-child)::after { content: ""; position: absolute; top: 15px; left: 50%; width: 100%; height: 2px; background: var(--border-color); }
+.tasty-progress-tracker__step.is-completed::after { background: var(--action-default); }
+
+/* ═══════════════ PAGE CHROME (added Phase 4) ═══════════════ */
+
+/* HEADER — Header.tsx. Brand0 (veniceBlue) bar, white logo/actions.
+   Height 70 (mobile) -> 80 (>=960, mediumMax); padding 0 10 -> 0 50.
+   Logo 20 -> 30 (>=480, smallMax). Optional navbar row sits below (>=961). */
+.tasty-header { width: 100%; }
+.tasty-header__bar {
+  display: flex; align-items: center; justify-content: space-between;
+  width: 100%; height: 70px; padding: 0 10px;
+  background: var(--ph-brand0); color: var(--ph-font-action);
+  box-shadow: 0 1px 5px var(--dustyGray);
+}
+.tasty-header__logo { display: inline-flex; align-items: center; height: 20px; color: var(--ph-logo-main); }
+.tasty-header__logo svg, .tasty-header__logo img { height: 100%; width: auto; display: block; }
+.tasty-header__actions { display: inline-flex; align-items: center; gap: 15px; justify-content: flex-end; }
+@media (min-width: 480px) { .tasty-header__logo { height: 30px; } }
+@media (min-width: 960px) { .tasty-header__bar { height: 80px; padding: 0 50px; } }
+
+/* FOOTER — Footer.tsx. Brand0 bar, white links. Mobile: stacked, centered
+   column (padding 30, gap 13). Desktop (>=481, mediumMin): 3-zone row
+   (left links | logo | right links), padding 15 50, gap 0. */
+.tasty-footer {
+  display: flex; flex-direction: column; align-items: center; gap: 13px;
+  padding: 30px; background: var(--ph-brand0);
+  color: var(--ph-font-action); border-top: 1px solid var(--border-color);
+}
+.tasty-footer__link, .tasty-footer a { color: var(--ph-font-action); text-decoration: none; cursor: pointer; }
+.tasty-footer__link:hover, .tasty-footer a:hover { text-decoration: underline; }
+.tasty-footer__side { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+.tasty-footer__logo { display: inline-flex; align-items: center; height: 20px; color: var(--ph-logo-main); }
+.tasty-footer__logo svg, .tasty-footer__logo img { height: 100%; width: auto; display: block; }
+@media (min-width: 481px) {
+  .tasty-footer { flex-direction: row; justify-content: space-between; align-items: center; gap: 0; padding: 15px 50px; }
+  .tasty-footer__side { flex-direction: row; max-width: calc(100% / 3); gap: 13px; }
+  .tasty-footer__side.is-left  { justify-content: flex-start; }
+  .tasty-footer__side.is-right { justify-content: flex-end; }
+}
+
+/* EXPORT BUTTON — Button.tsx group="icon": SQUARE icon button (keeps the
+   per-size radius, NOT the 50% circle); width = height per size. ExportButton
+   itself is just a ghost icon Button + a ghost default Button. */
+.tasty-btn.is-icon { padding: 0; width: 40px; }
+.tasty-btn.is-icon.is-sm { width: 30px; }
+.tasty-btn.is-icon.is-xs { width: 20px; }
+@media (min-width: 961px) {
+  .tasty-btn.is-icon { width: 50px; }
+  .tasty-btn.is-icon.is-sm { width: 40px; }
+  .tasty-btn.is-icon.is-xs { width: 30px; }
+}
+
+/* INPUT CONTAINER — InputContainer.tsx. Bordered wrapper with optional header
+   (zIndex3 bg + strong text), body, footer; max-width 760 at >=960. */
+.tasty-input-container { border: 1px solid var(--border-color); margin: 0 auto; color: var(--body-font-base); }
+.tasty-input-container.is-full { width: 100%; }
+.tasty-input-container__header { padding: var(--space-md); border-bottom: 1px solid var(--border-color); background: var(--white-space-z-index3); color: var(--body-font-strong); font-weight: var(--font-weight-semibold); }
+.tasty-input-container__body { padding: var(--space-md); }
+.tasty-input-container__footer { padding: var(--space-md); border-top: 1px solid var(--border-color); }
+@media (min-width: 960px) { .tasty-input-container { max-width: 760px; } .tasty-input-container.is-full { max-width: 100%; } }
+
+/* WORKSPACE CARD (shell) — WorkspaceCard.tsx. Flex-column, transparent surface;
+   width 280–480 / padding 10 -> 360–540 / padding 20 30 at >=1280. */
+.tasty-workspace-card { display: flex; flex-direction: column; flex: 1 1 auto; gap: var(--space-md); min-width: 280px; max-width: 480px; padding: 10px; background: transparent; }
+.tasty-workspace-card__header { min-height: 100px; }
+.tasty-workspace-card__body { min-height: 90px; }
+.tasty-workspace-card__foot { min-height: 50px; }
+@media (min-width: 1280px) { .tasty-workspace-card { min-width: 360px; max-width: 540px; padding: 20px 30px; } }
+
+/* DASHBOARD CREDENTIAL TILE (shell) — DashboardCredentialTile.tsx. A Tile with
+   an image zone + content zone: stacked (mobile) -> row (>=481). Image
+   100%×180 -> 160×170 (>=481) -> 160×160 (>=961). */
+.tasty-credential-tile { display: flex; flex-direction: column; gap: 20px; width: 100%; background: var(--white-space-z-index1); border: 1px solid var(--border-color); border-radius: 10px; padding: var(--space-md); }
+.tasty-credential-tile__img { flex: none; width: 100%; height: 180px; padding: 10px; display: inline-flex; align-items: center; justify-content: center; background: var(--white-space-z-index2); object-fit: contain; }
+.tasty-credential-tile__content { display: flex; flex-direction: column; gap: 18px; flex-grow: 1; padding: 0 10px; align-items: center; text-align: center; }
+@media (min-width: 481px) {
+  .tasty-credential-tile { flex-direction: row; }
+  .tasty-credential-tile__img { width: 160px; height: 170px; padding: 20px; }
+  .tasty-credential-tile__content { align-items: flex-start; text-align: left; }
+}
+@media (min-width: 961px) { .tasty-credential-tile__img { height: 160px; } }
+
+/* ── SearchInput: field + Search button JOINED into ONE component ──────────
+   The Search button is NEVER a separate sibling. Wrap a .tasty-search field
+   and a .tasty-btn in .tasty-search-group so they share a single outline.
+     <div class="tasty-search-group">
+       <span class="tasty-search has-config">
+         <span class="tasty-search__icon" data-g="search"></span>     <!-- tastyIcon('search') -->
+         <input class="tasty-input" placeholder="Search…">
+         <span class="tasty-search__config" data-g="config-sliders"></span>  <!-- tastyIcon('config-sliders') -->
+       </span>
+       <button class="tasty-btn tasty-search-group__go">Search</button>
+     </div>                                                                    */
+.tasty-search-group { display: inline-flex; align-items: stretch; }
+.tasty-search-group .tasty-search { width: auto; min-width: 280px; }
+.tasty-search-group .tasty-search .tasty-input { border-top-right-radius: 0; border-bottom-right-radius: 0; }
+.tasty-search-group__go { border-top-left-radius: 0; border-bottom-left-radius: 0; margin-left: -1px; }
+.tasty-search.has-config .tasty-input { padding-right: 40px; }
+.tasty-search__config { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: var(--body-font-weak); display: inline-flex; pointer-events: none; }

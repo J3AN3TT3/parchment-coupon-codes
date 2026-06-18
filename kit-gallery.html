@@ -1,0 +1,723 @@
+<!-- @startingPoint section="Parchment Tasty" subtitle="Full component gallery — all 89 components with a live theme switcher" viewport="1280x800" -->
+<!DOCTYPE html>
+<html lang="en" data-theme="default">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Parchment Tasty Kit — Component Gallery</title>
+<link rel="stylesheet" href="styles/tokens.css">
+<link rel="stylesheet" href="styles/icons.css">
+<link rel="stylesheet" href="styles/chrome.css">
+<link rel="stylesheet" href="styles/app.css">
+<link rel="stylesheet" href="styles/tasty-components.css">
+<style>
+  body { background: var(--white-space-z-index3); color: var(--body-font-base); font-family: var(--font-family-base); margin: 0; }
+  .gal-head { background: var(--c-page-header); color: #fff; padding: 24px 40px; }
+  .gal-head h1 { margin: 0 0 4px; font-size: 2.4rem; font-weight: 800; }
+  .gal-head p { margin: 0; color: #cfe8f3; font-size: 1.4rem; }
+  .themebar { display: flex; gap: 8px; margin-top: 14px; }
+  .themebar button { font: inherit; font-size: 1.2rem; padding: 5px 12px; border: 1px solid rgba(255,255,255,.4); background: transparent; color: #fff; border-radius: 9999px; cursor: pointer; }
+  .themebar button.active { background: #fff; color: var(--c-page-header); font-weight: 700; }
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 32px 40px 80px; }
+  section.demo { background: var(--white-space-base); border: 1px solid var(--border-color); margin-bottom: 24px; }
+  section.demo > h2 { margin: 0; font-size: 1.1rem; text-transform: uppercase; letter-spacing: .05em; color: var(--body-font-weak); padding: 12px 20px; border-bottom: 1px solid var(--border-color); background: var(--white-space-z-index2); }
+  .row { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; padding: 20px; }
+  .row.stack { flex-direction: column; align-items: stretch; }
+  .row.cols { align-items: flex-start; gap: 40px; }
+  .label { font-size: 1.1rem; color: var(--body-font-weak); width: 100%; margin: 0 0 6px; font-family: var(--font-family-mono); }
+  .row > .label { margin: 0 0 -6px; }   /* negative pull only offsets flex row-gap; inside a wrapper div it would overlap the label */
+  .cell { display: flex; flex-direction: column; gap: 8px; }
+  .iconwrap { display: flex; flex-wrap: wrap; gap: 14px; padding: 20px; font-size: 22px; color: var(--body-font-base); }
+  .illuswrap { display: flex; flex-wrap: wrap; gap: 16px; padding: 20px; align-items: flex-end; }
+  .icgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(86px, 1fr)); gap: 10px; padding: 20px; }
+  .ic-cell { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 6px; padding: 8px 4px; border: 1px solid var(--border-color); border-radius: 4px; color: var(--body-font-strong); }
+  .ic-name { font-size: 9px; color: var(--body-font-weak); font-family: var(--font-family-mono); word-break: break-all; text-align: center; }
+  .toc { columns: 3; column-gap: 24px; background: var(--white-space-base); border: 1px solid var(--border-color); padding: 16px 24px; margin-bottom: 24px; }
+  .toc a { display: block; padding: 2px 0; font-size: 1.25rem; color: var(--action-default); text-decoration: none; font-weight: 600; }
+</style>
+</head>
+<body>
+<div class="gal-head">
+  <h1>Parchment Tasty Kit — Component Gallery</h1>
+  <p>Vanilla CSS-class components on the verified v5.56.1 token set. Switch themes to check every component rebinds.</p>
+  <div class="themebar" id="themebar">
+    <button class="active" data-t="default">Default</button>
+    <button data-t="light">Light</button>
+    <button data-t="white">White</button>
+    <button data-t="dark">Dark</button>
+    <button data-t="contrast">Contrast</button>
+  </div>
+</div>
+<div class="wrap">
+  <nav class="toc">
+    <a href="#chrome">Chrome (Header · Nav · Footer)</a>
+    <a href="#buttons">Buttons</a><a href="#status">Status Tag</a><a href="#banner">Banner</a>
+    <a href="#selection">Checkbox · Toggle · Radio</a><a href="#fields">Fields · Select · Search</a>
+    <a href="#tags">Filter · Sort · Badge</a><a href="#feedback">Progress · Loader · Skeleton</a>
+    <a href="#containers">Tile · MemberBox · Hero</a><a href="#layout">SplitScreen · Accordion · Form</a>
+    <a href="#nav">Pagination</a><a href="#avatar">Avatar · Persona</a><a href="#overlays">Menu · PopOver · Modal · Toast</a>
+    <a href="#stepper">Stepper</a><a href="#table">Table</a><a href="#tooltip">Tooltip</a>
+    <a href="#navseg">NavToggle · Nav · Hamburger</a><a href="#optionbtn">OptionButtonList</a>
+    <a href="#display">Heading · DescList · DataBlock</a><a href="#forms2">Phone · Date · PersonaMenu</a>
+    <a href="#workflows">Parchment workflows</a><a href="#utils">Layout · Logos · a11y</a>
+    <a href="#icons">Icons</a><a href="#illus">Illustrations</a>
+  </nav>
+
+  <section class="demo" id="chrome"><h2>Chrome — PageHeader · NavTabs · WorkflowHeader · PageFooter</h2>
+    <div class="row stack" style="gap:16px;padding:20px">
+      <div data-component="page-header-mount" data-persona-greet="Hello," data-persona-name="Morgan Lee" data-persona-org="Pioneer High School" data-org-initials="PHS" data-lang="EN"></div>
+      <div data-component="nav-tabs-mount" data-active="needs-review" data-tabs='[{"id":"needs-review","label":"Needs Review","screen":"x"},{"id":"waiting","label":"Waiting","screen":"x"},{"id":"invited","label":"Invited","screen":"x"},{"id":"active","label":"Active","screen":"x"},{"id":"closed","label":"Closed","screen":"x"}]'></div>
+      <div data-component="workflow-header-mount" data-back-id="wf-back" data-back-label="Back to queue" data-cancel-id="wf-cancel" data-cancel-label="Cancel invitation"></div>
+      <div data-component="page-footer-mount"></div>
+    </div>
+  </section>
+
+  <section class="demo" id="buttons"><h2>Button — contexts · sizes · states</h2>
+    <div class="row">
+      <button class="tasty-btn is-primary is-md">Primary</button>
+      <button class="tasty-btn is-success is-md">Success</button>
+      <button class="tasty-btn is-warning is-md">Warning</button>
+      <button class="tasty-btn is-error is-md">Error</button>
+      <button class="tasty-btn is-bold is-md">Bold</button>
+    </div>
+    <div class="row">
+      <button class="tasty-btn is-ghost is-md">Ghost</button>
+      <button class="tasty-btn is-bold is-ghost is-md">Cancel</button>
+      <button class="tasty-btn is-primary is-xs">XS</button>
+      <button class="tasty-btn is-primary is-sm">Small</button>
+      <button class="tasty-btn is-primary is-lg">Large</button>
+      <button class="tasty-btn is-primary is-md" disabled>Disabled</button>
+    </div>
+    <div class="row">
+      <button class="tasty-btn is-frosted is-md">Frosted</button>
+      <button class="tasty-btn is-primary is-circle is-md" aria-label="Add"><span class="tcon" data-g="plus"></span></button>
+      <button class="tasty-btn is-success is-circle is-sm" aria-label="Check"><span class="tcon" data-g="check"></span></button>
+      <span style="flex:1;max-width:300px"><button class="tasty-btn is-primary is-md is-full">Full width</button></span>
+      <a class="tasty-btn is-primary is-md is-disabled">Disabled link-button</a>
+    </div>
+  </section>
+
+  <section class="demo" id="status"><h2>Status Tag</h2>
+    <div class="row">
+      <span class="tasty-status-tag is-solid is-primary"><span class="tcon" data-g="info"></span><span class="tasty-status-tag__label">Submitted</span></span>
+      <span class="tasty-status-tag is-solid is-success"><span class="tcon" data-g="check"></span><span class="tasty-status-tag__label">Verified</span></span>
+      <span class="tasty-status-tag is-solid is-error"><span class="tcon" data-g="cancel"></span><span class="tasty-status-tag__label">Rejected</span></span>
+      <span class="tasty-status-tag is-solid is-note"><span class="tcon" data-g="time"></span><span class="tasty-status-tag__label">Pending</span></span>
+      <span class="tasty-status-tag is-solid is-warning"><span class="tcon" data-g="warning"></span><span class="tasty-status-tag__label">On hold</span></span>
+    </div>
+    <div class="row">
+      <p class="label" style="width:100%">solid + border (<code>.has-border</code>)</p>
+      <span class="tasty-status-tag is-solid has-border is-primary"><span class="tcon" data-g="info"></span><span class="tasty-status-tag__label">Submitted</span></span>
+      <span class="tasty-status-tag is-solid has-border is-success"><span class="tcon" data-g="check"></span><span class="tasty-status-tag__label">Verified</span></span>
+      <span class="tasty-status-tag is-solid has-border is-error"><span class="tcon" data-g="cancel"></span><span class="tasty-status-tag__label">Rejected</span></span>
+      <span class="tasty-status-tag is-solid has-border is-note"><span class="tcon" data-g="time"></span><span class="tasty-status-tag__label">Pending</span></span>
+      <span class="tasty-status-tag is-solid has-border is-warning"><span class="tcon" data-g="warning"></span><span class="tasty-status-tag__label">On hold</span></span>
+    </div>
+  </section>
+
+  <section class="demo" id="banner"><h2>Banner</h2>
+    <div class="row stack">
+      <div class="tasty-banner is-primary"><span class="tasty-banner__icon"><span class="tcon" data-g="info"></span></span><span class="tasty-banner__message"><strong class="tasty-banner__title">Heads up.</strong> Three applications need your review.</span></div>
+      <div class="tasty-banner is-success"><span class="tasty-banner__icon"><span class="tcon" data-g="check"></span></span><span class="tasty-banner__message">Invitation sent to 12 learners.</span></div>
+      <div class="tasty-banner is-error"><span class="tasty-banner__icon"><span class="tcon" data-g="sis-error"></span></span><span class="tasty-banner__message">We couldn't reach the institution. Try again.</span></div>
+      <div class="tasty-banner is-warning"><span class="tasty-banner__icon"><span class="tcon" data-g="warning"></span></span><span class="tasty-banner__message">Enrollment deadline is in 2 days.</span></div>
+      <div class="tasty-banner is-bold"><span class="tasty-banner__icon"><span class="tcon" data-g="announcement"></span></span><span class="tasty-banner__message">Scheduled maintenance Saturday 6–8 AM.</span></div>
+    </div>
+    <div class="row stack">
+      <p class="label">backgroundStyle: frosted · ghost · transparent</p>
+      <div class="tasty-banner is-frosted"><span class="tasty-banner__icon"><span class="tcon" data-g="info"></span></span><span class="tasty-banner__message">Frosted — alabaster surface, body text.</span></div>
+      <div class="tasty-banner is-ghost"><span class="tasty-banner__icon"><span class="tcon" data-g="check"></span></span><span class="tasty-banner__message">Ghost — white surface, body text.</span></div>
+      <div class="tasty-banner is-transparent"><span class="tasty-banner__icon"><span class="tcon" data-g="sis-error"></span></span><span class="tasty-banner__message">Transparent — no surface.</span></div>
+    </div>
+    <div class="row stack">
+      <p class="label">content patterns — title + inline link · action button · dismissible</p>
+      <div class="tasty-banner is-primary"><span class="tasty-banner__icon"><span class="tcon" data-g="info"></span></span><span class="tasty-banner__message"><strong class="tasty-banner__title">Action required.</strong> Two guardian consents are missing. <a class="tasty-anchor" style="color:inherit;text-decoration:underline">Review consents</a></span></div>
+      <div class="tasty-banner is-warning"><span class="tasty-banner__icon"><span class="tcon" data-g="warning"></span></span><span class="tasty-banner__message">Enrollment deadline is in 2 days.</span><button class="tasty-btn is-ghost is-sm" style="margin-left:auto;flex-shrink:0">Extend deadline</button></div>
+      <div class="tasty-banner is-success"><span class="tasty-banner__icon"><span class="tcon" data-g="check"></span></span><span class="tasty-banner__message">Invitation sent to 12 learners.</span><button style="margin-left:auto;background:none;border:0;cursor:pointer;font-size:18px;line-height:1;color:inherit" aria-label="Dismiss">×</button></div>
+    </div>
+  </section>
+
+  <section class="demo" id="selection"><h2>Checkbox · Toggle · RadioList</h2>
+    <div class="row">
+      <label class="tasty-checkbox is-checked"><span class="tasty-checkbox__box"><span class="tcon" data-g="check"></span></span> Select all</label>
+      <label class="tasty-checkbox"><span class="tasty-checkbox__box"></span> Unchecked</label>
+      <label class="tasty-checkbox is-indeterminate"><span class="tasty-checkbox__box"><span class="tcon" data-g="minus"></span></span> Some</label>
+      <span class="tasty-toggle" data-tasty="toggle" role="button" aria-pressed="false"><span class="tasty-toggle__track"><span class="tasty-toggle__circle"><span class="tcon tasty-toggle__ic-on" data-g="check"></span><span class="tcon tasty-toggle__ic-off" data-g="cancel"></span></span><span class="tasty-toggle__text"><span class="tasty-toggle__on">ON</span><span class="tasty-toggle__off">OFF</span></span></span><span class="tasty-toggle__label">Open enrollment</span></span>
+      <span class="tasty-toggle is-primary is-on" data-tasty="toggle" role="button" aria-pressed="true"><span class="tasty-toggle__track"><span class="tasty-toggle__circle"><span class="tcon tasty-toggle__ic-on" data-g="check"></span><span class="tcon tasty-toggle__ic-off" data-g="cancel"></span></span><span class="tasty-toggle__text"><span class="tasty-toggle__on">ON</span><span class="tasty-toggle__off">OFF</span></span></span><span class="tasty-toggle__label">Notifications</span></span>
+      <label class="tasty-radio is-checked"><span class="tasty-radio__dot"></span> Concurrent</label>
+      <label class="tasty-radio"><span class="tasty-radio__dot"></span> Dual</label>
+    </div>
+    <div class="row">
+      <p class="label" style="width:100%">states: disabled · invalid — toggle variants: small · solid · success</p>
+      <label class="tasty-checkbox is-disabled"><span class="tasty-checkbox__box"></span> Disabled</label>
+      <label class="tasty-radio is-disabled"><span class="tasty-radio__dot"></span> Disabled</label>
+      <label class="tasty-radio is-invalid"><span class="tasty-radio__dot"></span> Invalid</label>
+      <span class="tasty-toggle is-sm is-primary is-on" data-tasty="toggle" role="button" aria-pressed="true"><span class="tasty-toggle__track"><span class="tasty-toggle__circle"><span class="tcon tasty-toggle__ic-on" data-g="check"></span><span class="tcon tasty-toggle__ic-off" data-g="cancel"></span></span><span class="tasty-toggle__text"><span class="tasty-toggle__on">ON</span><span class="tasty-toggle__off">OFF</span></span></span><span class="tasty-toggle__label">Small</span></span>
+      <span class="tasty-toggle is-solid is-primary is-on" data-tasty="toggle" role="button" aria-pressed="true"><span class="tasty-toggle__track"><span class="tasty-toggle__circle"><span class="tcon tasty-toggle__ic-on" data-g="check"></span><span class="tcon tasty-toggle__ic-off" data-g="cancel"></span></span><span class="tasty-toggle__text"><span class="tasty-toggle__on">ON</span><span class="tasty-toggle__off">OFF</span></span></span><span class="tasty-toggle__label">Solid</span></span>
+      <span class="tasty-toggle is-success is-on" data-tasty="toggle" role="button" aria-pressed="true"><span class="tasty-toggle__track"><span class="tasty-toggle__circle"><span class="tcon tasty-toggle__ic-on" data-g="check"></span><span class="tcon tasty-toggle__ic-off" data-g="cancel"></span></span><span class="tasty-toggle__text"><span class="tasty-toggle__on">ON</span><span class="tasty-toggle__off">OFF</span></span></span><span class="tasty-toggle__label">Success</span></span>
+      <span class="tasty-toggle is-disabled" role="button" aria-pressed="false" aria-disabled="true"><span class="tasty-toggle__track"><span class="tasty-toggle__circle"><span class="tcon tasty-toggle__ic-on" data-g="check"></span><span class="tcon tasty-toggle__ic-off" data-g="cancel"></span></span><span class="tasty-toggle__text"><span class="tasty-toggle__on">ON</span><span class="tasty-toggle__off">OFF</span></span></span><span class="tasty-toggle__label">Disabled</span></span>
+    </div>
+  </section>
+
+  <section class="demo" id="fields"><h2>TextField — states (default · valid ✓ · error ⚠ · disabled) · TextArea · Select · Search</h2>
+    <div class="row">
+      <div class="cell" style="width:210px"><label class="tasty-field"><span class="tasty-field__label">Learner name <span class="req">*</span></span><span class="tasty-field__control"><input class="tasty-input" placeholder="Jordan Rivera"></span><span class="tasty-field__msg">Required.</span></label></div>
+      <div class="cell" style="width:210px"><label class="tasty-field is-valid"><span class="tasty-field__label">Email</span><span class="tasty-field__control"><span class="tasty-field__vicon"><span class="tcon" data-g="check"></span></span><input class="tasty-input" value="jordan@school.edu"></span><span class="tasty-field__msg" style="color:var(--context-success)">Looks good.</span></label></div>
+      <div class="cell" style="width:210px"><label class="tasty-field is-error"><span class="tasty-field__label">Email</span><span class="tasty-field__control"><span class="tasty-field__vicon"><span class="tcon" data-g="warning"></span></span><input class="tasty-input" value="bad@"></span><span class="tasty-field__msg">Enter a valid email.</span></label></div>
+      <div class="cell" style="width:210px"><label class="tasty-field"><span class="tasty-field__label">Org (locked)</span><span class="tasty-field__control"><input class="tasty-input" value="Mt. Whitney HS" disabled></span></label></div>
+    </div>
+    <div class="row">
+      <div class="cell" style="width:200px"><label class="tasty-field"><span class="tasty-field__label">Term</span><span class="tasty-field__control"><select class="tasty-select"><option>Fall 2026</option><option>Spring 2027</option></select></span></label></div>
+      <div class="cell" style="width:260px"><label class="tasty-field"><span class="tasty-field__label">Search</span><span class="tasty-search"><span class="tasty-search__icon"><span class="tcon" data-g="search"></span></span><input class="tasty-input" placeholder="Search learners…"></span></label></div>
+      <div class="cell" style="flex:1;min-width:240px"><label class="tasty-field"><span class="tasty-field__label">Notes</span><span class="tasty-field__control"><textarea class="tasty-textarea" placeholder="Add a note…"></textarea></span></label></div>
+    </div>
+    <div class="row">
+      <div>
+        <p class="label">SearchInput — field + Search button JOINED in <code>.tasty-search-group</code> (the button is never a separate sibling)</p>
+        <div class="tasty-search-group">
+          <span class="tasty-search has-config">
+            <span class="tasty-search__icon"><span class="tcon" data-g="search"></span></span>
+            <input class="tasty-input" placeholder="Search learners, courses…">
+            <span class="tasty-search__config"><span class="tcon" data-g="config-sliders"></span></span>
+          </span>
+          <button class="tasty-btn tasty-search-group__go">Search</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="demo" id="tags"><h2>FilterTag · SortTag · BadgeCounter</h2>
+    <div class="row">
+      <span class="tasty-filter-tag is-active">Needs review <span class="tasty-filter-tag__x"><span class="tcon" data-g="cancel"></span></span></span>
+      <span class="tasty-filter-tag">Waiting</span>
+      <span class="tasty-filter-tag">Invited</span>
+      <button class="tasty-sort-tag is-asc">Learner <span class="tcon" data-g="caret"></span></button>
+      <button class="tasty-sort-tag is-desc">Date <span class="tcon" data-g="caret"></span></button>
+      <button class="tasty-sort-tag">Term <span class="tcon" data-g="caret" style="opacity:.4"></span></button>
+      <span style="display:inline-flex;gap:6px;align-items:center">Needs review <span class="tasty-badge">7</span></span>
+      <span style="display:inline-flex;gap:6px;align-items:center">Invited <span class="tasty-badge is-neutral">23</span></span>
+    </div>
+    <div class="row stack">
+      <p class="label">BadgeCounter — colorContext (solid): bold · primary · success · warning · error</p>
+      <div class="row">
+        <span class="tasty-badge is-bold">7</span>
+        <span class="tasty-badge is-primary">7</span>
+        <span class="tasty-badge is-brand">7</span>
+        <span class="tasty-badge is-success">7</span>
+        <span class="tasty-badge is-warning">7</span>
+        <span class="tasty-badge is-error">99+</span>
+        <span class="tasty-badge is-alert">99+</span>
+      </div>
+      <p class="label">backgroundStyle: frosted · ghost · transparent (× context)</p>
+      <div class="row">
+        <span class="tasty-badge is-frosted">7</span>
+        <span class="tasty-badge is-ghost is-success">7</span>
+        <span class="tasty-badge is-ghost is-error">7</span>
+        <span class="tasty-badge is-transparent is-primary">7</span>
+        <span class="tasty-badge is-transparent is-warning">7</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="demo" id="feedback"><h2>ProgressBar · Loader · Skeleton</h2>
+    <div class="row stack">
+      <div class="tasty-progress"><div class="tasty-progress__fill" style="width:60%"></div></div>
+      <div class="tasty-progress is-warning"><div class="tasty-progress__fill" style="width:40%"></div></div>
+      <div class="tasty-progress is-success"><div class="tasty-progress__fill" style="width:100%"></div></div>
+      <div class="tasty-progress is-error"><div class="tasty-progress__fill" style="width:25%"></div></div>
+      <div class="tasty-progress is-sm"><div class="tasty-progress__fill" style="width:60%"></div></div>
+      <hr class="tasty-divider">
+      <hr class="tasty-divider is-light">
+      <hr class="tasty-divider is-heavy">
+      <hr class="tasty-divider is-dashed">
+      <hr class="tasty-divider is-dotted">
+      <div style="display:flex;align-items:stretch;gap:0;min-height:40px"><span style="align-self:center">Left</span><hr class="tasty-divider is-vertical"><span style="align-self:center">Right (vertical divider)</span></div>
+    </div>
+    <div class="row">
+      <span class="tasty-loader"></span>
+      <div class="cell" style="width:280px"><div class="tasty-skeleton" style="width:70%"></div><div class="tasty-skeleton" style="width:90%"></div><div class="tasty-skeleton" style="width:50%"></div></div>
+    </div>
+  </section>
+
+  <section class="demo" id="containers"><h2>Tile (rounded · sharp) · MemberBox (top accent bar) · HeroPanel · SearchBanner</h2>
+    <div class="row">
+      <div class="tasty-tile is-interactive" style="width:230px"><div class="tasty-tile__title">Mt. Whitney HS</div><div class="tasty-tile__meta">14 active applications</div></div>
+      <div class="tasty-tile is-sharp"><span class="tcon" data-g="certificate" style="font-size:48px;color:var(--action-default)"></span><div class="tasty-tile__title">Send transcript</div><div class="tasty-tile__meta">ServiceSelectCard — centered, 280–480px</div><button class="tasty-btn is-sm" style="width:100%">Order now</button></div>
+      <div class="tasty-member-box" style="width:330px;--member-color:var(--blueLagoon)"><div class="tasty-member-logo"></div><div><div class="tasty-member-box__name">Sierra College</div><div class="tasty-member-box__meta">Institution · Rocklin, CA</div></div></div>
+    </div>
+    <div class="row stack">
+      <div class="tasty-hero">
+        <div class="tasty-hero__title">Dual enrollment</div>
+        <div class="tasty-hero__blocks">
+          <div class="tasty-hero__block"><div class="tasty-hero__stat">128</div><div class="tasty-hero__label">Active</div></div>
+          <div class="tasty-hero__block"><div class="tasty-hero__stat">14</div><div class="tasty-hero__label">Needs review</div></div>
+          <div class="tasty-hero__block"><div class="tasty-hero__stat">96%</div><div class="tasty-hero__label">Approved</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="row stack" style="gap:0;padding:0">
+      <div class="tasty-search-banner"><span class="tcon" data-g="search"></span><span style="flex:1"><input class="tasty-input" placeholder="Find a learner, course, or institution"></span></div>
+    </div>
+  </section>
+
+  <section class="demo" id="layout"><h2>SplitScreen · Accordion · Form / InputGrid</h2>
+    <div class="row stack" style="padding:0">
+      <div class="tasty-split"><div><strong>Left pane</strong><p style="color:var(--body-font-weak)">Selection or context.</p></div><div><strong>Right pane</strong><p style="color:var(--body-font-weak)">Detail or form.</p></div></div>
+    </div>
+    <div class="row stack">
+      <div class="tasty-accordion is-open"><div class="tasty-accordion__head" data-tasty="accordion"><span>Eligibility requirements</span><span class="tcon" data-g="caret"></span></div><div class="tasty-accordion__body">GPA, grade level, and counselor sign-off.</div></div>
+      <div class="tasty-accordion"><div class="tasty-accordion__head" data-tasty="accordion"><span>Consent &amp; guardians</span><span class="tcon" data-g="caret"></span></div><div class="tasty-accordion__body">Guardian consent is captured before institution review.</div></div>
+    </div>
+    <div class="row stack">
+      <form class="tasty-form"><fieldset class="tasty-fieldset"><legend>Learner details</legend>
+        <div class="tasty-input-grid is-name"><label class="tasty-field"><span class="tasty-field__label">First name</span><input class="tasty-input"></label><label class="tasty-field"><span class="tasty-field__label">Middle name</span><input class="tasty-input"></label><label class="tasty-field"><span class="tasty-field__label">Last name</span><input class="tasty-input"></label></div>
+        <div class="tasty-input-grid is-dob" style="margin-top:var(--space-md)"><label class="tasty-field"><span class="tasty-field__label">Month</span><span class="tasty-field__control"><select class="tasty-select"><option>May</option></select></span></label><label class="tasty-field"><span class="tasty-field__label">Day</span><span class="tasty-field__control"><select class="tasty-select"><option>9</option></select></span></label><label class="tasty-field"><span class="tasty-field__label">Year</span><span class="tasty-field__control"><select class="tasty-select"><option>2009</option></select></span></label></div>
+      </fieldset></form>
+    </div>
+  </section>
+
+  <section class="demo" id="nav"><h2>Pagination</h2>
+    <div class="row">
+      <span class="tasty-pagination">
+        <span class="tasty-pagination__item is-disabled"><span class="tcon" data-g="back-caret"></span></span>
+        <span class="tasty-pagination__item is-active">1</span>
+        <span class="tasty-pagination__item">2</span>
+        <span class="tasty-pagination__item">3</span>
+        <span class="tasty-pagination__item"><span class="tcon" data-g="caret"></span></span>
+      </span>
+    </div>
+  </section>
+
+  <section class="demo" id="avatar"><h2>Avatar · PersonaIcon</h2>
+    <div class="row">
+      <img class="tasty-avatar" src="assets/avatar-admin.png" alt="">
+      <span class="tasty-persona-icon">SC</span>
+      <img class="tasty-member-logo" src="assets/parchment-logo.png" alt="" style="object-fit:contain">
+    </div>
+  </section>
+
+  <section class="demo" id="overlays"><h2>OptionsMenu (kebab) · PopOver · Modal · Toast</h2>
+    <div class="row">
+      <span style="position:relative">
+        <button class="tasty-kebab" data-tasty="menu" aria-label="Row actions"><span></span><span></span><span></span></button>
+        <div class="tasty-menu"><div class="tasty-menu__item is-selected"><span class="tcon" data-g="preview"></span> View application</div><div class="tasty-menu__item"><span class="tcon" data-g="send"></span> Resend invite</div><div class="tasty-menu__item is-danger"><span class="tcon" data-g="cancel"></span> Withdraw</div></div>
+      </span>
+      <span style="position:relative">
+        <button class="tasty-btn is-ghost is-sm" data-tasty="menu">PopOver</button>
+        <div class="tasty-popover">Counselor and guardian approvals run concurrently.</div>
+      </span>
+      <div class="tasty-popover has-sections" style="position:static;width:320px">
+        <div class="tasty-popover__header">Approval details</div>
+        <div class="tasty-popover__content">Counselor and guardian approvals run concurrently — either can complete first.</div>
+        <div class="tasty-popover__footer"><a class="tasty-anchor">Learn more</a></div>
+      </div>
+      <button class="tasty-btn is-primary is-sm" data-tasty="modal-open" value="#demo-modal">Open modal</button>
+      <button class="tasty-btn is-success is-sm" data-tasty="toast" value="Invitation sent" data-kind="success">Fire toast</button>
+    </div>
+    <div class="row">
+      <div class="tasty-toast is-success" style="position:static"><span class="tcon" data-g="check"></span><span class="tasty-toast__msg">Invitation sent to 12 learners</span><button class="tasty-toast__x">×</button></div>
+      <div class="tasty-toast is-error" style="position:static"><span class="tcon" data-g="sis-error"></span><span class="tasty-toast__msg">Couldn't reach the institution</span><button class="tasty-toast__x">×</button></div>
+      <div class="tasty-toast is-primary" style="position:static"><span class="tcon" data-g="info"></span><span class="tasty-toast__msg">3 applications need review</span><button class="tasty-toast__x">×</button></div>
+    </div>
+    <div class="row">
+      <div class="tasty-toast is-warning" style="position:static"><span class="tcon" data-g="warning"></span><span class="tasty-toast__msg">Deadline is in 2 days</span><button class="tasty-toast__x">×</button></div>
+      <div class="tasty-toast is-note" style="position:static"><span class="tcon" data-g="comments"></span><span class="tasty-toast__msg">Draft saved automatically</span><button class="tasty-toast__x">×</button></div>
+      <div class="tasty-toast" style="position:static"><span class="tcon" data-g="notification-bell"></span><span class="tasty-toast__msg">Frosted (neutral) default surface</span><button class="tasty-toast__x">×</button></div>
+    </div>
+    <div class="row">
+      <div>
+        <p class="label">OptionsMenu — static states: default · selected · focused · disabled · danger</p>
+        <div class="tasty-menu" style="position:static;display:inline-block">
+          <div class="tasty-menu__item"><span class="tcon" data-g="preview"></span> View application</div>
+          <div class="tasty-menu__item is-selected"><span class="tcon" data-g="check"></span> Current view</div>
+          <div class="tasty-menu__item is-focused"><span class="tcon" data-g="settings"></span> Keyboard focus</div>
+          <div class="tasty-menu__item is-disabled"><span class="tcon" data-g="locked"></span> Unavailable</div>
+          <div class="tasty-menu__item is-danger"><span class="tcon" data-g="cancel"></span> Withdraw</div>
+        </div>
+      </div>
+      <div>
+        <p class="label">ToastStack — the fixed stack container (<code>tastyToast()</code> mounts here; <code>.is-config</code> = primary alias)</p>
+        <div class="tasty-toast-stack" style="position:static">
+          <div class="tasty-toast is-success" style="position:static"><span class="tcon" data-g="check"></span><span class="tasty-toast__msg">Saved</span><button class="tasty-toast__x">×</button></div>
+          <div class="tasty-toast is-config" style="position:static"><span class="tcon" data-g="settings"></span><span class="tasty-toast__msg">Settings updated</span><button class="tasty-toast__x">×</button></div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div>
+        <p class="label">Modal — static render (live version: “Open modal” above; <code>.tasty-modal</code> inside fixed <code>.tasty-modal-overlay</code>)</p>
+        <div class="tasty-modal" style="max-width:520px" role="dialog" aria-modal="true">
+          <div class="tasty-modal__head"><span class="tasty-modal__title">Withdraw application</span><button class="tasty-modal__x">×</button></div>
+          <div class="tasty-modal__body">This removes the learner from the Fall 2026 ENGL 101 section. This can't be undone.</div>
+          <div class="tasty-modal__foot"><button class="tasty-btn is-bold is-ghost is-sm">Cancel</button><button class="tasty-btn is-error is-sm">Withdraw</button></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="demo" id="stepper"><h2>Stepper (application tracker) · ProgressTracker (clickable wizard nav)</h2>
+    <div class="row stack">
+      <p class="label">ProgressTracker — completed (clickable) · active · incomplete</p>
+      <div class="tasty-progress-tracker" style="max-width:480px">
+        <div class="tasty-progress-tracker__step is-completed"><span class="tasty-progress-tracker__node"><span class="tcon" data-g="check"></span></span><span class="tasty-progress-tracker__lbl">Pathway</span></div>
+        <div class="tasty-progress-tracker__step is-completed"><span class="tasty-progress-tracker__node"><span class="tcon" data-g="check"></span></span><span class="tasty-progress-tracker__lbl">Preferences</span></div>
+        <div class="tasty-progress-tracker__step is-active"><span class="tasty-progress-tracker__node">3</span><span class="tasty-progress-tracker__lbl">Schools</span></div>
+        <div class="tasty-progress-tracker__step"><span class="tasty-progress-tracker__node">4</span><span class="tasty-progress-tracker__lbl">Review</span></div>
+      </div>
+    </div>
+    <div class="row stack">
+      <div class="tasty-stepper">
+        <div class="tasty-stepper__step is-done"><span class="tasty-stepper__node"><span class="tcon" data-g="check"></span></span><span class="tasty-stepper__lbl">Applied</span><span class="tasty-stepper__meta">May 2</span></div>
+        <div class="tasty-stepper__step is-done"><span class="tasty-stepper__node"><span class="tcon" data-g="check"></span></span><span class="tasty-stepper__lbl">Guardian</span><span class="tasty-stepper__meta">May 3</span></div>
+        <div class="tasty-stepper__step is-active"><span class="tasty-stepper__node"><span class="tcon" data-g="time"></span></span><span class="tasty-stepper__lbl">Counselor</span><span class="tasty-stepper__meta">Due May 9</span></div>
+        <div class="tasty-stepper__step"><span class="tasty-stepper__node">4</span><span class="tasty-stepper__lbl">Institution</span></div>
+        <div class="tasty-stepper__step"><span class="tasty-stepper__node">5</span><span class="tasty-stepper__lbl">Registered</span></div>
+      </div>
+    </div>
+    <div class="row stack">
+      <div class="tasty-stepper is-vertical" style="max-width:280px">
+        <div class="tasty-stepper__step is-done"><span class="tasty-stepper__node"><span class="tcon" data-g="check"></span></span><div><div class="tasty-stepper__lbl">Applied</div><div class="tasty-stepper__meta">May 2</div></div></div>
+        <div class="tasty-stepper__step is-denied"><span class="tasty-stepper__node"><span class="tcon" data-g="cancel"></span></span><div><div class="tasty-stepper__lbl">Counselor</div><div class="tasty-stepper__meta">Not approved</div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="demo" id="table"><h2>Table</h2>
+    <div style="padding:20px">
+      <table class="tasty-table">
+        <thead><tr><th>Learner</th><th>Course</th><th>Institution</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>Jordan Rivera</td><td>ENGL 101</td><td>Sierra College</td><td><span class="tasty-status-tag is-solid is-note is-sm"><span class="tcon" data-g="time"></span><span class="tasty-status-tag__label">Pending</span></span></td></tr>
+          <tr><td>Avery Chen</td><td>MATH 120</td><td>Foothill College</td><td><span class="tasty-status-tag is-solid is-success is-sm"><span class="tcon" data-g="check"></span><span class="tasty-status-tag__label">Verified</span></span></td></tr>
+          <tr class="tasty-table__row is-selected"><td>Sam Ortiz (selected)</td><td>HIST 110</td><td>Sierra College</td><td><span class="tasty-status-tag is-solid is-note is-sm"><span class="tcon" data-g="time"></span><span class="tasty-status-tag__label">Pending</span></span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="demo" id="tooltip"><h2>Tooltip — colorContext (bold · primary · success · error · light)</h2>
+    <div class="row"><span class="tasty-tooltip"><span class="tasty-tooltip__header">Institution review</span>The accrediting body confirms eligibility.</span></div>
+    <div class="row" style="flex-wrap:wrap;gap:24px">
+      <span class="tasty-tooltip">Bold — codGray (default)</span>
+      <span class="tasty-tooltip is-primary">Primary — deepCerulean</span>
+      <span class="tasty-tooltip is-success">Success — basil</span>
+      <span class="tasty-tooltip is-error">Error — cherry</span>
+      <span class="tasty-tooltip is-light">Light — fog + border</span>
+    </div>
+  </section>
+
+  <section class="demo" id="navseg"><h2>NavToggle · ViewController · Navbar · HamburgerMenu · SectionHeaderTitle</h2>
+    <div class="row stack">
+      <p class="label">NavToggle — segmented pill switcher (active fills tealBlue) + count badges</p>
+      <ul class="tasty-navtoggle">
+        <li class="tasty-navtoggle__item is-active">Needs Review <span class="tasty-badge">7</span></li>
+        <li class="tasty-navtoggle__item">Waiting <span class="tasty-badge">12</span></li>
+        <li class="tasty-navtoggle__item">Invited <span class="tasty-badge">23</span></li>
+        <li class="tasty-navtoggle__item">Active</li>
+        <li class="tasty-navtoggle__item">Closed</li>
+      </ul>
+    </div>
+    <div class="row stack">
+      <p class="label">ViewController — underlined uppercase tabs</p>
+      <div class="tasty-viewtabs"><button class="tasty-viewtab is-active">Overview</button><button class="tasty-viewtab">Learners</button><button class="tasty-viewtab">Settings</button><button class="tasty-viewtab is-disabled">Archive</button></div>
+    </div>
+    <div class="row stack" style="padding:0">
+      <p class="label" style="padding:0 20px">Navbar</p>
+      <nav class="tasty-navbar"><a class="tasty-navbar__link is-active">Dashboard</a><a class="tasty-navbar__link">Orders</a><a class="tasty-navbar__link">Learners</a><a class="tasty-navbar__link is-disabled">Settings</a></nav>
+    </div>
+    <div class="row">
+      <button class="tasty-hamburger"><span class="tcon" data-g="menu"></span></button>
+      <div class="tasty-hamburger-menu" style="width:240px"><div class="tasty-hamburger-menu__item is-active">Dashboard</div><div class="tasty-hamburger-menu__item">Orders</div><div class="tasty-hamburger-menu__item">Settings</div><div class="tasty-hamburger-menu__item is-disabled">Admin (disabled)</div></div>
+    </div>
+    <div class="row stack">
+      <div class="tasty-section-header has-border"><span class="tasty-section-header__graphic"><span class="tcon" data-g="school"></span></span><div><div class="tasty-section-header__title">Institutions</div><div class="tasty-section-header__sub">Manage accrediting bodies and review settings</div></div></div>
+    </div>
+  </section>
+
+  <section class="demo" id="optionbtn"><h2>OptionButtonList — circular radio cards (selected = green ring + check)</h2>
+    <div class="row">
+      <div class="tasty-optionbtn-list">
+        <div class="tasty-optionbtn is-selected"><span class="tasty-optionbtn__circle"><span class="tcon" data-g="school"></span><span class="tasty-optionbtn__check"><span class="tcon" data-g="check"></span></span></span><div class="tasty-optionbtn__title">Concurrent</div><div class="tasty-optionbtn__desc">At the high school</div></div>
+        <div class="tasty-optionbtn"><span class="tasty-optionbtn__circle"><span class="tcon" data-g="school"></span></span><div class="tasty-optionbtn__title">Dual</div><div class="tasty-optionbtn__desc">At the college</div></div>
+        <div class="tasty-optionbtn"><span class="tasty-optionbtn__circle"><span class="tcon" data-g="global"></span></span><div class="tasty-optionbtn__title">Online</div><div class="tasty-optionbtn__desc">Remote</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="demo" id="display"><h2>Heading · DescriptionList · DynamicDataBlock · Anchor · Image · ExportButton</h2>
+    <div class="row stack">
+      <p class="label">Heading — Tasty headings are weight 400 (light); level defaults 40/30/25/20/16/13</p>
+      <div><span class="tasty-heading is-1">Heading 1</span></div>
+      <div><span class="tasty-heading is-2">Heading 2</span></div>
+      <div><span class="tasty-heading is-3">Heading 3</span></div>
+      <div><span class="tasty-heading is-4">Heading 4</span></div>
+      <div><span class="tasty-heading is-5">Heading 5</span></div>
+      <div><span class="tasty-heading is-6">Heading 6</span></div>
+    </div>
+    <div class="row stack">
+      <p class="label">DescriptionList — term : definition (1 : 2)</p>
+      <dl class="tasty-dl" style="max-width:420px">
+        <div class="tasty-dl__row"><dt class="tasty-dl__term">Learner</dt><dd class="tasty-dl__desc">Jordan Rivera</dd></div>
+        <div class="tasty-dl__row"><dt class="tasty-dl__term">Course</dt><dd class="tasty-dl__desc">ENGL 101</dd></div>
+        <div class="tasty-dl__row"><dt class="tasty-dl__term">Institution</dt><dd class="tasty-dl__desc">Sierra College</dd></div>
+      </dl>
+    </div>
+    <div class="row">
+      <div class="tasty-data-block"><div class="tasty-data-block__label">Active</div><div class="tasty-data-block__value">128</div><div class="tasty-data-block__desc">enrollments</div></div>
+      <a class="tasty-anchor">View all <span class="tcon" data-g="arrow"></span></a>
+      <img class="tasty-image has-border" src="assets/avatar-admin.png" style="width:64px" alt="">
+      <button class="tasty-btn is-ghost is-md"><span class="tcon" data-g="download"></span> Export</button>
+    </div>
+  </section>
+
+  <section class="demo" id="forms2"><h2>InputPhone · DatePicker · InputGroup · ListCheckbox · PersonaMenu (panel)</h2>
+    <div class="row">
+      <div class="tasty-input-phone"><span class="tasty-input-phone__code">+1</span><input placeholder="(555) 012-3456"></div>
+      <div class="tasty-datepicker" style="width:200px"><span class="tasty-datepicker__value">May 9, 2026</span><span class="tasty-datepicker__icon"><span class="tcon" data-g="calendar"></span></span></div>
+      <div class="tasty-datepicker is-empty" style="width:200px"><span class="tasty-datepicker__value">Select a date</span><span class="tasty-datepicker__icon"><span class="tcon" data-g="calendar"></span></span></div>
+    </div>
+    <div class="row stack">
+      <p class="label">InputGroup — left accent gutter + wrapped fields + message</p>
+      <div class="tasty-input-group is-error" style="max-width:520px">
+        <div class="tasty-input-group__fields">
+          <label class="tasty-field" style="flex:1"><span class="tasty-field__label">First</span><span class="tasty-field__control"><input class="tasty-input"></span></label>
+          <label class="tasty-field" style="flex:1"><span class="tasty-field__label">Last</span><span class="tasty-field__control"><input class="tasty-input"></span></label>
+        </div>
+        <div class="tasty-input-group__msg">At least one field is required.</div>
+      </div>
+      <div class="tasty-input-group is-valid" style="max-width:520px">
+        <div class="tasty-input-group__fields">
+          <label class="tasty-field" style="flex:1"><span class="tasty-field__label">First</span><span class="tasty-field__control"><input class="tasty-input" value="Jordan"></span></label>
+          <label class="tasty-field" style="flex:1"><span class="tasty-field__label">Last</span><span class="tasty-field__control"><input class="tasty-input" value="Rivera"></span></label>
+        </div>
+        <div class="tasty-input-group__msg">Looks good.</div>
+      </div>
+    </div>
+    <div class="row cols">
+      <div class="tasty-list-checkbox">
+        <div class="tasty-list-checkbox__controls"><a>Select all</a><a>Deselect all</a></div>
+        <label class="tasty-checkbox is-checked"><span class="tasty-checkbox__box"><span class="tcon" data-g="check"></span></span> Mathematics</label>
+        <label class="tasty-checkbox"><span class="tasty-checkbox__box"></span> Sciences</label>
+        <label class="tasty-checkbox"><span class="tasty-checkbox__box"></span> Humanities</label>
+        <div class="tasty-list-checkbox is-horizontal">
+          <label class="tasty-checkbox"><span class="tasty-checkbox__box"></span> Fall</label>
+          <label class="tasty-checkbox"><span class="tasty-checkbox__box"></span> Spring</label>
+          <label class="tasty-checkbox"><span class="tasty-checkbox__box"></span> Summer</label>
+        </div>
+      </div>
+      <div class="tasty-persona-menu">
+        <div class="tasty-persona-menu__header">
+          <span class="tasty-persona-icon">SC</span>
+          <div><div class="tasty-persona-menu__greeting">Welcome,</div><div class="tasty-persona-menu__name">Sam Carter</div><div class="tasty-persona-menu__org">Sierra College</div></div>
+        </div>
+        <div class="tasty-persona-menu__item"><span class="tcon" data-g="acct-profile"></span> Profile</div>
+        <div class="tasty-persona-menu__item"><span class="tcon" data-g="arrow"></span> Switch organization</div>
+        <div class="tasty-persona-menu__item is-disabled"><span class="tcon" data-g="settings"></span> Org settings</div>
+        <div class="tasty-persona-menu__item is-signout">Sign out</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="demo" id="workflows"><h2>Parchment workflows (shells) — Dropzone · FilePreview · ManageEntity · MemberSelect · ServiceSelectCard · SearchBulk · ConsentCapture · Workflow</h2>
+    <div class="row">
+      <div class="tasty-dropzone" style="width:300px">
+        <span class="tasty-dropzone__icon"><span class="tcon" data-g="upload"></span></span>
+        <span class="tasty-dropzone__prompt">Upload a file</span>
+        <span class="tasty-dropzone__hint">PDF under 25 MB</span>
+        <span class="tasty-dropzone__types"><span class="tasty-dropzone__type">PDF</span><span class="tasty-dropzone__type">PNG</span><span class="tasty-dropzone__type">JPG</span></span>
+      </div>
+      <div class="tasty-file-preview" style="width:300px">
+        <div class="tasty-file-preview__bar">Transcript.pdf <span><span class="tcon" data-g="zoom-in"></span> <span class="tcon" data-g="print"></span> <span class="tcon" data-g="download"></span></span></div>
+        <div class="tasty-file-preview__body"><span class="tcon" data-g="document" style="font-size:48px"></span></div>
+        <div class="tasty-file-preview__foot">Page 1 of 3</div>
+      </div>
+    </div>
+    <div class="row stack">
+      <div class="tasty-manage-entity">
+        <div class="tasty-manage-entity__head"><div class="tasty-section-header"><span class="tasty-section-header__graphic"><span class="tcon" data-g="school"></span></span><div><div class="tasty-section-header__title" style="font-size:2rem">Sierra College</div></div></div><div style="display:flex;gap:10px;align-items:center"><span class="tasty-manage-entity__id">#10428</span><span class="tcon" data-g="edit"></span><span class="tcon" data-g="delete"></span></div></div>
+        <dl class="tasty-manage-entity__grid"><div><dt>Type</dt><dd>Community college</dd></div><div><dt>Location</dt><dd>Rocklin, CA</dd></div><div><dt>Status</dt><dd>Verified</dd></div></dl>
+      </div>
+    </div>
+    <div class="row stack">
+      <div class="tasty-member-select">
+        <div class="tasty-member-select__card"><div class="tasty-member-logo"></div><div class="tasty-member-box__name">Sierra College</div><div class="tasty-member-box__meta">Rocklin, CA</div><button class="tasty-btn is-ghost is-sm">Select</button></div>
+        <div class="tasty-member-select__card"><div class="tasty-member-logo"></div><div class="tasty-member-box__name">Foothill College</div><div class="tasty-member-box__meta">Los Altos Hills, CA</div><button class="tasty-btn is-ghost is-sm">Select</button></div>
+      </div>
+    </div>
+    <div class="row">
+      <p class="label">ServiceSelectCard — <code>.tasty-tile.is-sharp</code> composition: fog card, centered graphic + name + notes + full-width action, optional Default badge</p>
+      <div class="tasty-tile is-sharp" style="position:relative">
+        <span style="position:relative;width:100%;display:flex;justify-content:center"><span id="ssc-award"></span>
+          <span style="position:absolute;top:50%;right:0;transform:translateY(-50%)"><span class="tasty-status-tag is-solid is-success"><span class="tcon" data-g="check"></span><span class="tasty-status-tag__label">Default</span></span></span>
+        </span>
+        <span class="tasty-tile__title" style="margin:0">Transcript</span>
+        <span style="font-size:13px;color:var(--body-font-weak);text-align:center;padding-bottom:10px">Send an official transcript to a college, employer, or yourself.</span>
+        <button class="tasty-btn is-primary is-md is-full">Select</button>
+      </div>
+      <div class="tasty-tile is-sharp">
+        <span style="width:100%;display:flex;justify-content:center"><span id="ssc-pathways"></span></span>
+        <span class="tasty-tile__title" style="margin:0">Pathways</span>
+        <span style="font-size:13px;color:var(--body-font-weak);text-align:center;padding-bottom:10px">Explore programs that accept your completed credits.</span>
+        <button class="tasty-btn is-ghost is-md is-full">Select</button>
+      </div>
+    </div>
+    <div class="row stack">
+      <div class="tasty-search-bulk is-open" style="max-width:520px">
+        <div class="tasty-search-bulk__bar">Bulk search <span class="tcon" data-g="caret"></span></div>
+        <div class="tasty-search-bulk__body"><select class="tasty-select"><option>Learner ID</option></select><textarea class="tasty-textarea" placeholder="Paste IDs, one per line…"></textarea></div>
+      </div>
+    </div>
+    <div class="row stack">
+      <div class="tasty-consent" style="max-width:520px">
+        <div class="tasty-consent__tabs"><button class="tasty-consent__tab is-active">Draw</button><button class="tasty-consent__tab">Type</button></div>
+        <div class="tasty-consent__canvas"><button class="tasty-btn is-transparent is-sm">Clear</button></div>
+      </div>
+    </div>
+    <div class="row stack">
+      <div class="tasty-workflow">
+        <div class="tasty-workflow__head"><a class="tasty-anchor"><span class="tcon" data-g="back-caret"></span> Back</a><span class="tasty-workflow__title">Invite learner</span><a class="tasty-anchor" style="justify-self:end">✕</a></div>
+        <div class="tasty-workflow__body" style="color:var(--body-font-weak)">Workflow step content…</div>
+        <div class="tasty-workflow__foot"><button class="tasty-btn is-bold is-ghost is-md">Cancel</button><button class="tasty-btn is-primary is-md">Continue</button></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="demo" id="newcomps"><h2>Header · Footer · ExportButton (icon Button) · InputContainer · WorkspaceCard · DashboardCredentialTile</h2>
+    <div class="row stack">
+      <p class="label">Header — Navbar top bar (brand0, logo left, icon actions right; 70 → 80px ≥960)</p>
+      <div class="tasty-header">
+        <div class="tasty-header__bar">
+          <span class="tasty-header__logo" id="hdr-logo"></span>
+          <span class="tasty-header__actions">
+            <button class="tasty-btn is-ghost is-icon" aria-label="Notifications"><span class="tcon" data-g="notification-bell"></span></button>
+            <button class="tasty-btn is-ghost is-icon" aria-label="Help"><span class="tcon" data-g="support"></span></button>
+            <button class="tasty-btn is-icon" aria-label="Account"><span class="tcon" data-g="acct-profile"></span></button>
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="row stack">
+      <p class="label">Footer — stacked/centered on mobile, 3-zone row at ≥481 (left links · logo · right links)</p>
+      <div class="tasty-footer">
+        <span class="tasty-footer__side is-left"><a class="tasty-footer__link">Privacy</a><a class="tasty-footer__link">Terms</a></span>
+        <span class="tasty-footer__logo" id="ftr-logo"></span>
+        <span class="tasty-footer__side is-right"><a class="tasty-footer__link">Support</a><a class="tasty-footer__link">Contact</a></span>
+      </div>
+    </div>
+    <div class="row stack">
+      <p class="label">ExportButton — square icon Button (<code>.is-icon</code>: width = height, per-size radius) + ghost label Button</p>
+      <div class="row">
+        <button class="tasty-btn is-ghost is-icon is-xs" aria-label="Export xs"><span class="tcon" data-g="download"></span></button>
+        <button class="tasty-btn is-ghost is-icon is-sm" aria-label="Export sm"><span class="tcon" data-g="download"></span></button>
+        <button class="tasty-btn is-ghost is-icon" aria-label="Export md"><span class="tcon" data-g="download"></span></button>
+        <button class="tasty-btn is-icon" aria-label="Export solid"><span class="tcon" data-g="download"></span></button>
+        <button class="tasty-btn is-ghost is-md"><span class="tcon" data-g="download"></span> Export</button>
+      </div>
+    </div>
+    <div class="row stack">
+      <p class="label">InputContainer — bordered wrapper: header (shaded) · body · footer (max-width 760 ≥960)</p>
+      <div class="tasty-input-container is-full" style="max-width:480px">
+        <div class="tasty-input-container__header">Applicant details</div>
+        <div class="tasty-input-container__body">
+          <label class="tasty-field"><span class="tasty-field__label">Full name</span><span class="tasty-field__control"><input class="tasty-input" value="Jordan Rivera"></span></label>
+        </div>
+        <div class="tasty-input-container__footer"><button class="tasty-btn is-primary is-sm">Save</button></div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="tasty-workspace-card" style="border:1px dashed var(--border-color)">
+        <div class="tasty-workspace-card__header"><span class="tasty-heading is-4">Fall 2026</span></div>
+        <div class="tasty-workspace-card__body"><p class="tasty-content">WorkspaceCard (shell) — transparent flex-column with header / body / foot zones.</p></div>
+        <div class="tasty-workspace-card__foot"><button class="tasty-btn is-primary is-sm">Open workspace</button></div>
+      </div>
+      <div class="tasty-credential-tile" style="max-width:480px">
+        <div class="tasty-credential-tile__img"><span class="tcon" data-g="certificate" style="font-size:48px;color:var(--action-default)"></span></div>
+        <div class="tasty-credential-tile__content">
+          <span class="tasty-heading is-4">AP Calculus AB</span>
+          <p class="tasty-content">DashboardCredentialTile (shell) — Sierra College · 4 credits · Issued May 2026.</p>
+          <button class="tasty-btn is-ghost is-sm"><span class="tcon" data-g="download"></span> Download</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="demo" id="utils"><h2>Layout &amp; utilities — FlexContainer · GridContainer · Content · Logos · a11y</h2>
+    <div class="row stack">
+      <p class="label">FlexContainer · GridContainer (layout helpers) · Layout (page frame: header / content / footer, sticky-footer column)</p>
+      <div class="tasty-flex"><div class="tasty-tile" style="flex:1">Flex A</div><div class="tasty-tile" style="flex:1">Flex B</div><div class="tasty-tile" style="flex:1">Flex C</div></div>
+      <div class="tasty-flex is-column" style="max-width:240px"><div class="tasty-tile">Column A</div><div class="tasty-tile">Column B</div></div>
+      <div class="tasty-grid" style="grid-template-columns:repeat(3,1fr)"><div class="tasty-tile">Grid 1</div><div class="tasty-tile">Grid 2</div><div class="tasty-tile">Grid 3</div></div>
+      <div class="tasty-layout" style="min-height:180px;border:1px dashed var(--border-color)"><div class="tasty-header"><div class="tasty-header__bar" style="height:40px;padding:0 16px"><span class="tasty-header__logo" style="font-size:14px">Parchment</span></div></div><div style="padding:10px 16px;color:var(--body-font-weak)">Page content (Layout pushes the footer down)</div><div class="tasty-footer" style="padding:10px 16px"><span class="tasty-footer__link">Privacy</span></div></div>
+    </div>
+    <div class="row stack">
+      <p class="label">Brand logos — ParchmentLogo · ParchmentAwardLogo · ParchmentPathwaysLogo · SupportalLogo (vendored SVGs)</p>
+      <div class="illuswrap" id="logowrap"></div>
+    </div>
+    <div class="row">
+      <p class="tasty-content" style="max-width:560px">Content — a body-copy wrapper at 16px / 1.25 line-height (medium). <span class="tasty-sr-only">ScreenReaderOnly + LiveRegion are visually-hidden a11y utilities (.tasty-sr-only / .tasty-live-region) — present but invisible by design; this sentence is inside one.</span> (The hidden a11y text after this is intentionally not visible.)</p>
+    </div>
+    <div class="row stack">
+      <p class="tasty-content is-sm" style="max-width:560px">Content small — 13px.</p>
+      <p class="tasty-content is-lg" style="max-width:560px">Content large — 20px.</p>
+      <p class="tasty-content is-loose" style="max-width:560px">Content loose — 1.75 line-height. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.</p>
+    </div>
+  </section>
+
+  <section class="demo" id="icons"><h2>Icons — the full Tasty set via <code>tastyIcon('slug')</code></h2>
+    <div class="icgrid" id="iconwrap"></div>
+  </section>
+
+  <section class="demo" id="illus"><h2>Graphics — <code>tastyIcon('slug', {category:'graphic'})</code> · Illustrations — <code>tastyIllus('slug')</code></h2>
+    <div class="icgrid" id="graphicwrap"></div>
+    <div class="icgrid" id="illuswrap" style="grid-template-columns:repeat(auto-fill,minmax(150px,1fr))"></div>
+  </section>
+</div>
+
+<!-- demo modal -->
+<div class="tasty-modal-overlay" id="demo-modal" style="display:none">
+  <div class="tasty-modal" role="dialog" aria-modal="true">
+    <div class="tasty-modal__head"><span class="tasty-modal__title">Withdraw application</span><button class="tasty-modal__x" data-tasty="modal-close">×</button></div>
+    <div class="tasty-modal__body">This removes the learner from the Fall 2026 ENGL 101 section. This can't be undone.</div>
+    <div class="tasty-modal__foot"><button class="tasty-btn is-bold is-ghost is-sm" data-tasty="modal-close">Cancel</button><button class="tasty-btn is-error is-sm" data-tasty="modal-close">Withdraw</button></div>
+  </div>
+</div>
+
+<script src="assets/tasty/manifest.js"></script>
+<script src="scripts/tasty-icons.js"></script>
+<script src="scripts/tasty-interactions.js"></script>
+<script src="scripts/components.js"></script>
+<script>
+  // theme switcher
+  document.getElementById('themebar').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    document.documentElement.setAttribute('data-theme', b.dataset.t);
+    this.querySelectorAll('button').forEach(function (x) { x.classList.toggle('active', x === b); });
+  });
+  // full icon / graphic / illustration libraries from the real manifest, slug-labeled
+  (function () {
+    var M = window.TASTY_ICONS || {};
+    function cells(cat, render) {
+      return Object.keys(M[cat] || {}).map(function (s) {
+        return '<span class="ic-cell" title="' + s + '">' + render(s) + '<span class="ic-name">' + s + '</span></span>';
+      }).join('');
+    }
+    document.getElementById('iconwrap').innerHTML = cells('icon', function (s) { return tastyIcon(s, { size: 24 }); });
+    document.getElementById('graphicwrap').innerHTML = cells('graphic', function (s) { return tastyIcon(s, { size: 36, category: 'graphic' }); });
+    document.getElementById('illuswrap').innerHTML = cells('vector', function (s) { return tastyIllus(s, { size: 90 }); });
+    var logoSlugs = ['parchment-logo', 'parchment-award-logo', 'parchment-pathways-logo', 'supportal-logo'];
+    var lw = document.getElementById('logowrap');
+    if (lw) lw.innerHTML = logoSlugs.map(function (s) { return tastyIllus(s, { size: 120, alt: s }); }).filter(Boolean).join('');
+    var ssca = document.getElementById('ssc-award'); if (ssca) ssca.innerHTML = tastyIllus('parchment-award-logo', { size: 150 });
+    var sscp = document.getElementById('ssc-pathways'); if (sscp) sscp.innerHTML = tastyIllus('parchment-pathways-logo', { size: 150 });
+    // Header/Footer logo slots — the WHITE wordmark PNG, not tastyIllus('parchment-logo')
+    // (VG-1n is the dark/color lockup; unreadable on the dark header/footer chrome)
+    ['hdr-logo', 'ftr-logo'].forEach(function (id) {
+      var el = document.getElementById(id);
+      if (el) el.innerHTML = '<img class="tillus" src="' + (window.tastyAssetUrl ? tastyAssetUrl('assets/parchment-logo-white.png') : 'assets/parchment-logo-white.png') + '" alt="Parchment">';
+    });
+  })();
+</script>
+<script>/* data-g filler: paint .tcon[data-g] from the Tasty manifest (mask, recolorable) */
+document.addEventListener("DOMContentLoaded",function(){var ic=(window.TASTY_ICONS||{}).icon||{};document.querySelectorAll(".tcon[data-g]").forEach(function(el){var r=ic[el.getAttribute("data-g")];if(r&&r.uri){el.style.setProperty("--tcon","url("+r.uri+")");}else{console.warn("[gallery] no icon: "+el.getAttribute("data-g"));}});});</script>
+</body>
+</html>

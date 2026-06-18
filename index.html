@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="default">
+<!--
+  Coupon Codes Prototype — Admin Settings
+  Screens: list (table), create-01 (form), create-02 (send), create-03 (confirmation)
+  Modal:   revoke confirmation
+-->
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Coupon Codes — Admin Settings</title>
+  <link rel="stylesheet" href="styles/tokens.css">
+  <link rel="stylesheet" href="styles/icons.css">
+  <link rel="stylesheet" href="styles/chrome.css">
+  <link rel="stylesheet" href="styles/app.css">
+  <link rel="stylesheet" href="styles/tasty-components.css">
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <div class="dashboard-screen-wrap">
+    <div class="app-wrap">
+
+      <!-- Chrome: PageHeader -->
+      <div data-component="page-header-mount"
+           data-persona-greet="Hello,"
+           data-persona-name="Jenny"
+           data-persona-org="Apple Tree High School"
+           data-org-initials="ATHS"
+           data-lang="EN"></div>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           SCREEN 1: Coupon Codes List
+      ═══════════════════════════════════════════════════════════ -->
+      <section id="screen-list" class="screen active">
+
+        <!-- Sub-nav back bar -->
+        <div class="subnav-bar">
+          <button class="workflow-nav-btn subnav-back">
+            <span class="tcon" data-g="back-caret"></span> BACK TO SETTINGS
+          </button>
+        </div>
+
+        <div class="page-content" id="main-content">
+
+          <!-- Control bar: illustration + title + search + actions -->
+          <div class="coupon-ctrl-bar">
+            <div class="coupon-ctrl-bar__left">
+              <div class="coupon-illus-wrap" id="coupon-illus-header"></div>
+              <h1 class="coupon-page-title">Coupon Codes</h1>
+            </div>
+            <div class="coupon-ctrl-bar__right">
+              <div class="tasty-search-group">
+                <span class="tasty-search has-config">
+                  <span class="tasty-search__icon"><span class="tcon" data-g="search"></span></span>
+                  <input type="text" class="tasty-input" id="search-input" placeholder="Enter Search Term" oninput="handleSearch(this.value)">
+                  <span class="tasty-search__config"><span class="tcon" data-g="filter"></span></span>
+                </span>
+                <button class="tasty-btn tasty-search-group__go" onclick="handleSearch(document.getElementById('search-input').value)">Search</button>
+              </div>
+              <button class="tasty-btn is-success" id="btn-create" onclick="openCreateFlow()">
+                <span class="tcon" data-g="add"></span> Create Coupon Code
+              </button>
+              <div style="position:relative; display:inline-block;">
+                <button class="tasty-btn is-ghost kebab-btn" id="kebab-btn" onclick="toggleKebab()" aria-label="More options">
+                  <span class="tcon" data-g="more-menu"></span>
+                </button>
+                <div class="tasty-menu" id="kebab-menu" style="display:none; position:absolute; right:0; top:44px; min-width:180px; z-index:50;">
+                  <button class="tasty-menu__item" onclick="closeKebab()">Export CSV</button>
+                  <button class="tasty-menu__item" onclick="closeKebab()">Import Codes</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Status filter tags (multi-select; all active by default) -->
+          <div class="filter-tag-row" id="status-filter-tags" role="group" aria-label="Filter by status">
+            <button class="tasty-filter-tag is-active" data-filter="active"
+                    aria-pressed="true"
+                    onclick="toggleFilter('active', this)">
+              <span class="ft-cap" aria-hidden="true">
+                <span class="ft-cap__ring"></span>
+                <span class="tcon ft-cap__check" data-g="check"></span>
+              </span>
+              Active <span class="tasty-badge" id="badge-active">2</span>
+            </button>
+            <button class="tasty-filter-tag is-active" data-filter="redeemed"
+                    aria-pressed="true"
+                    onclick="toggleFilter('redeemed', this)">
+              <span class="ft-cap" aria-hidden="true">
+                <span class="ft-cap__ring"></span>
+                <span class="tcon ft-cap__check" data-g="check"></span>
+              </span>
+              Redeemed <span class="tasty-badge" id="badge-redeemed">1</span>
+            </button>
+            <button class="tasty-filter-tag is-active" data-filter="expired"
+                    aria-pressed="true"
+                    onclick="toggleFilter('expired', this)">
+              <span class="ft-cap" aria-hidden="true">
+                <span class="ft-cap__ring"></span>
+                <span class="tcon ft-cap__check" data-g="check"></span>
+              </span>
+              Expired <span class="tasty-badge" id="badge-expired">1</span>
+            </button>
+            <button class="tasty-filter-tag is-active" data-filter="revoked"
+                    aria-pressed="true"
+                    onclick="toggleFilter('revoked', this)">
+              <span class="ft-cap" aria-hidden="true">
+                <span class="ft-cap__ring"></span>
+                <span class="tcon ft-cap__check" data-g="check"></span>
+              </span>
+              Revoked <span class="tasty-badge" id="badge-revoked">1</span>
+            </button>
+          </div>
+
+          <!-- Coupon table -->
+          <table class="tasty-table coupon-table" id="coupon-table">
+            <thead>
+              <tr>
+                <th class="tasty-table__th sortable" onclick="sortTable('name')">
+                  Name <span class="tcon" data-g="caret" style="font-size:11px; vertical-align:middle;"></span>
+                </th>
+                <th class="tasty-table__th">Applies to</th>
+                <th class="tasty-table__th">Expires</th>
+                <th class="tasty-table__th">Status</th>
+                <th class="tasty-table__th">Usage</th>
+                <th class="tasty-table__th"></th>
+              </tr>
+            </thead>
+            <tbody id="coupon-tbody">
+              <!-- Rendered by renderTable() in app.js -->
+            </tbody>
+          </table>
+
+          <!-- Empty state (shown when no rows match filter) -->
+          <div id="empty-state" class="coupon-empty-state" style="display:none;">
+            <h2 class="coupon-empty-title">Create a coupon code to get started.</h2>
+            <div id="empty-illus-slot" class="coupon-empty-illus"></div>
+          </div>
+
+          <!-- Pagination -->
+          <div id="pagination-wrap" class="coupon-pagination-wrap">
+            <p class="pagination-showing">SHOWING <strong id="showing-range">1-5</strong> OF <strong id="showing-total">5</strong></p>
+            <nav class="tasty-pagination" aria-label="Pagination">
+              <button class="tasty-pagination__item is-disabled" aria-label="Previous page">
+                <span class="tcon" data-g="back-caret"></span>
+              </button>
+              <button class="tasty-pagination__item is-active" aria-current="page">1</button>
+              <button class="tasty-pagination__item next-page" aria-label="Next page">
+                <span class="tcon next-icon" data-g="back-caret" style="display:inline-block; transform:rotate(180deg);"></span>
+              </button>
+            </nav>
+            <p class="pagination-per-page">
+              RESULTS PER PAGE
+              <span class="per-page-trigger" id="per-page-trigger" onclick="togglePerPage()">
+                10 <span class="tcon" data-g="caret" style="font-size:10px; vertical-align:middle;"></span>
+              </span>
+              <span class="per-page-options" id="per-page-options" style="display:none;">
+                <button onclick="setPerPage(10)">10</button>
+                <button onclick="setPerPage(25)">25</button>
+                <button onclick="setPerPage(50)">50</button>
+              </span>
+            </p>
+          </div>
+
+        </div>
+      </section>
+
+
+      <!-- ═══════════════════════════════════════════════════════════
+           SCREEN 2: Create Coupon Code — Step 1 (Form)
+      ═══════════════════════════════════════════════════════════ -->
+      <section id="screen-create-01" class="screen">
+
+        <div class="workflow-header">
+          <div class="workflow-header-left">
+            <button class="workflow-nav-btn" onclick="showScreen('list')">
+              <span class="tcon" data-g="back-caret"></span> BACK
+            </button>
+          </div>
+          <div class="workflow-header-right">
+            <button class="workflow-nav-btn" onclick="cancelCreate()">
+              CANCEL <span class="tcon" data-g="cancel"></span>
+            </button>
+          </div>
+        </div>
+
+        <div class="page-content">
+          <div class="tasty-input-container">
+
+            <div class="tasty-input-container__header">
+              <h2 style="margin:0; font-size:16px;">Create coupon code</h2>
+            </div>
+
+            <div class="tasty-input-container__body create-form-body">
+
+              <!-- Code Name -->
+              <div class="tasty-field" id="field-code-name">
+                <label class="tasty-field__label" for="input-code-name">
+                  <span class="req" aria-hidden="true">*</span> Code name
+                </label>
+                <div class="tasty-field__control">
+                  <input type="text" class="tasty-input" id="input-code-name"
+                    placeholder="" oninput="validateCreate()"
+                    aria-required="true" aria-describedby="hint-code-name">
+                </div>
+                <span class="tasty-field__msg" id="hint-code-name">Give your code a name that you'll recognize on the management list.</span>
+              </div>
+
+              <!-- Applies To -->
+              <div class="tasty-field" style="margin-top:24px;" id="field-applies-to">
+                <label class="tasty-field__label"><span class="req" aria-hidden="true">*</span> Applies to</label>
+                <label class="tasty-radio is-checked" id="radio-all-products" onclick="selectAppliesTo('all', this)">
+                  <span class="tasty-radio__dot"></span>
+                  All products
+                </label>
+                <label class="tasty-radio" id="radio-specific" style="margin-top:10px;" onclick="selectAppliesTo('specific', this)">
+                  <span class="tasty-radio__dot"></span>
+                  Specific product
+                </label>
+                <div id="product-select-wrap" style="margin-top:10px; display:none;">
+                  <div class="tasty-field__control" style="position:relative;">
+                    <span class="product-select-lock"><span class="tcon" data-g="locked"></span></span>
+                    <select class="tasty-input product-select" disabled>
+                      <option value="transcripts">Transcripts</option>
+                      <option value="diplomas">Diplomas</option>
+                      <option value="certificates">Certificates</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Expiration Date -->
+              <div class="tasty-field" style="margin-top:24px;" id="field-expiry">
+                <label class="tasty-field__label" for="input-expiry"><span class="req" aria-hidden="true">*</span> Expiration date</label>
+                <div class="tasty-field__control" style="position:relative; max-width:300px;">
+                  <input type="text" class="tasty-input" id="input-expiry"
+                    placeholder="mm / dd / yyyy"
+                    oninput="validateCreate()" onfocus="this.select()"
+                    aria-required="true" aria-label="Expiration date, format mm/dd/yyyy">
+                  <span class="date-icon" aria-hidden="true"><span class="tcon" data-g="calendar"></span></span>
+                </div>
+              </div>
+
+              <!-- Usage Limits -->
+              <div class="usage-limits-section">
+                <h3 class="usage-limits-heading">
+                  <span id="usage-icon-slot" aria-hidden="true"></span> Usage limits
+                </h3>
+
+                <!-- Total Usage -->
+                <div class="usage-row">
+                  <label class="tasty-field__label"><span class="req" aria-hidden="true">*</span> Total usage</label>
+                  <div class="usage-controls">
+                    <label class="tasty-radio" id="radio-total-unlimited" onclick="selectUsage('total', 'unlimited', this)">
+                      <span class="tasty-radio__dot"></span>
+                      Unlimited
+                    </label>
+                    <label class="tasty-radio is-checked" id="radio-total-limit" onclick="selectUsage('total', 'limit', this)">
+                      <span class="tasty-radio__dot"></span>
+                      Limit to
+                    </label>
+                    <div class="usage-input-group" id="total-limit-group">
+                      <input type="number" class="tasty-input usage-number" id="input-total-limit"
+                        value="100" min="1" oninput="validateCreate()">
+                      <span class="usage-label">uses total</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Per Learner -->
+                <div class="usage-row" style="margin-top:16px;">
+                  <label class="tasty-field__label"><span class="req" aria-hidden="true">*</span> Per learner</label>
+                  <div class="usage-controls">
+                    <label class="tasty-radio" id="radio-learner-unlimited" onclick="selectUsage('learner', 'unlimited', this)">
+                      <span class="tasty-radio__dot"></span>
+                      Unlimited
+                    </label>
+                    <label class="tasty-radio is-checked" id="radio-learner-limit" onclick="selectUsage('learner', 'limit', this)">
+                      <span class="tasty-radio__dot"></span>
+                      Limit to
+                    </label>
+                    <div class="usage-input-group" id="learner-limit-group">
+                      <input type="number" class="tasty-input usage-number" id="input-learner-limit"
+                        value="1" min="1" oninput="validateCreate()">
+                      <span class="usage-label">per learner</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Internal Note -->
+              <div class="tasty-field" style="margin-top:24px;">
+                <label class="tasty-field__label" for="input-note">
+                  Internal note <span class="optional-label">(Optional)</span>
+                </label>
+                <div class="tasty-field__control">
+                  <textarea class="tasty-textarea" id="input-note"
+                    maxlength="250" rows="4"
+                    oninput="updateCharCount(this)"
+                    aria-describedby="char-count"></textarea>
+                </div>
+                <span class="tasty-field__msg" id="char-count" aria-live="polite">0 of 250 characters used</span>
+              </div>
+
+            </div><!-- /body -->
+
+            <div class="tasty-input-container__footer create-form-footer">
+              <div class="form-footer-btns">
+                <button class="tasty-btn is-success" id="btn-generate"
+                  disabled onclick="goToConfirmation()">Generate</button>
+              </div>
+              <p class="req-note">
+                <span class="req" aria-hidden="true">*</span> All items with a red asterisk are required.
+              </p>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ═══════════════════════════════════════════════════════════
+           SCREEN 3: Send Coupon Code — Step 2
+      ═══════════════════════════════════════════════════════════ -->
+      <section id="screen-create-02" class="screen">
+
+        <div class="workflow-header">
+          <div class="workflow-header-left">
+            <button class="workflow-nav-btn" onclick="showScreen('create-03')">
+              <span class="tcon" data-g="back-caret"></span> BACK
+            </button>
+          </div>
+          <div class="workflow-header-right">
+            <button class="workflow-nav-btn" onclick="cancelCreate()">
+              CANCEL <span class="tcon" data-g="cancel"></span>
+            </button>
+          </div>
+        </div>
+
+        <div class="page-content">
+          <div class="tasty-input-container">
+
+            <div class="tasty-input-container__header">
+              <h2 style="margin:0; font-size:16px;">Send coupon code</h2>
+            </div>
+
+            <div class="tasty-input-container__body send-form-body">
+
+              <p class="send-intro">
+                Add learners manually, select them from the learner directory, or upload a batch file.
+              </p>
+
+              <!-- 3 send-method options (OptionButtonList) -->
+              <div class="send-options-row" role="group" aria-label="Choose how to add learners">
+                <button class="send-option is-active" id="opt-library"
+                        aria-pressed="true"
+                        onclick="selectSendMethod('library')">
+                  <div class="send-option__circle is-selected" id="opt-library-circle">
+                    <span class="tcon" data-g="search-users-fill" aria-hidden="true"></span>
+                    <span class="send-option__check"><span class="tcon" data-g="check" aria-hidden="true"></span></span>
+                  </div>
+                  <span class="send-option__label">Add from learner<br>directory</span>
+                </button>
+                <button class="send-option" id="opt-individual"
+                        aria-pressed="false"
+                        onclick="selectSendMethod('individual')">
+                  <div class="send-option__circle" id="opt-individual-circle">
+                    <span class="tcon" data-g="invite-user-fill" aria-hidden="true"></span>
+                    <span class="send-option__check" style="display:none;"><span class="tcon" data-g="check" aria-hidden="true"></span></span>
+                  </div>
+                  <span class="send-option__label">Add new<br>recipient(s)</span>
+                </button>
+                <button class="send-option" id="opt-csv"
+                        aria-pressed="false"
+                        onclick="selectSendMethod('csv')">
+                  <div class="send-option__circle" id="opt-csv-circle">
+                    <span class="tcon" data-g="file-csv" aria-hidden="true"></span>
+                    <span class="send-option__check" style="display:none;"><span class="tcon" data-g="check" aria-hidden="true"></span></span>
+                  </div>
+                  <span class="send-option__label">Upload a CSV</span>
+                </button>
+              </div>
+
+              <!-- Panel: Learner Directory -->
+              <div id="panel-library" class="send-panel">
+                <div class="library-search-header">
+                  <div class="library-search-left">
+                    <label class="tasty-field__label" for="library-search-input" style="margin-bottom:6px;">Search learners</label>
+                    <span class="tasty-search library-search-input-wrap">
+                      <span class="tasty-search__icon" aria-hidden="true"><span class="tcon" data-g="search"></span></span>
+                      <input type="text" class="tasty-input" id="library-search-input"
+                        placeholder="" oninput="filterLearners(this.value)"
+                        aria-label="Search learners by name or email">
+                    </span>
+                  </div>
+                  <div class="library-count-label">
+                    Send List <span class="tasty-badge" id="library-count">0</span> Selected
+                  </div>
+                </div>
+                <div class="learner-list-box" id="learner-list-box">
+                  <!-- populated by renderLibraryList() -->
+                </div>
+              </div>
+
+              <!-- Panel: Add New Recipient(s) -->
+              <div id="panel-individual" class="send-panel" style="display:none;">
+                <div class="name-row">
+                  <div class="tasty-field" style="flex:1;">
+                    <label class="tasty-field__label"><span class="req">*</span> First Name</label>
+                    <div class="tasty-field__control">
+                      <input type="text" class="tasty-input" id="input-first-name" placeholder="">
+                    </div>
+                  </div>
+                  <div class="tasty-field" style="flex:1;">
+                    <label class="tasty-field__label"><span class="req">*</span> Last Name</label>
+                    <div class="tasty-field__control">
+                      <input type="text" class="tasty-input" id="input-last-name" placeholder="">
+                    </div>
+                  </div>
+                </div>
+                <div class="tasty-field" style="margin-top:16px;">
+                  <label class="tasty-field__label"><span class="req">*</span> Email</label>
+                  <div class="email-add-row">
+                    <div class="tasty-field__control" style="flex:1;">
+                      <input type="email" class="tasty-input" id="input-email" placeholder=""
+                        onkeydown="if(event.key==='Enter')addRecipient()">
+                    </div>
+                    <button class="tasty-btn is-ghost is-primary add-btn" onclick="addRecipient()">
+                      <span class="tcon" data-g="add"></span> Add
+                    </button>
+                  </div>
+                </div>
+                <div class="send-list-section">
+                  <div class="send-list-heading-row">
+                    <h4 class="send-list-heading">
+                      Send List <span class="tasty-badge" id="send-count-badge">0</span>
+                    </h4>
+                    <button class="send-list-clear-btn" onclick="clearSendList()">Clear All</button>
+                  </div>
+                  <div class="send-list-box" id="send-list-box">
+                    <div id="send-list-empty-state" class="send-list-empty">
+                      <span>No learners added yet. Add them above.</span>
+                    </div>
+                    <ul id="send-list-items" style="display:none; list-style:none; padding:0; margin:0;"></ul>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Panel: Upload CSV -->
+              <div id="panel-csv" class="send-panel" style="display:none;">
+                <div class="tasty-dropzone">
+                  <span class="tcon" data-g="cloud-upload-fill" style="font-size:32px; color:var(--action-default);"></span>
+                  <p class="tasty-dropzone__hint">Drag a CSV file here, or <span style="color:var(--action-default); cursor:pointer;">browse to upload</span></p>
+                  <p class="tasty-dropzone__hint" style="font-size:12px; margin-top:4px;">First Name, Last Name, Email columns required</p>
+                </div>
+              </div>
+
+              <!-- Send timing: navToggle as tablist -->
+              <div class="send-action-row">
+                <div class="tasty-navtoggle" role="tablist" aria-label="Send timing">
+                  <button class="tasty-navtoggle__item is-active"
+                    role="tab" id="tab-send-now"
+                    aria-selected="true" aria-controls="tabpanel-send-now"
+                    onclick="selectSendAction('now')">
+                    <span class="tcon" data-g="send" aria-hidden="true"></span> Send now
+                  </button>
+                  <button class="tasty-navtoggle__item"
+                    role="tab" id="tab-schedule"
+                    aria-selected="false" aria-controls="tabpanel-schedule"
+                    onclick="selectSendAction('schedule')">
+                    <span class="tcon" data-g="calendar" aria-hidden="true"></span> Schedule send
+                  </button>
+                </div>
+              </div>
+
+              <!-- Tabpanel: Send now (no additional fields) -->
+              <div role="tabpanel" id="tabpanel-send-now" aria-labelledby="tab-send-now"></div>
+
+              <!-- Tabpanel: Schedule send -->
+              <div role="tabpanel" id="tabpanel-schedule" aria-labelledby="tab-schedule" hidden>
+                <div class="schedule-fields">
+                  <div class="schedule-fields-row">
+                    <div class="tasty-field is-valid" style="flex:1.5;">
+                      <label class="tasty-field__label" for="schedule-datetime">
+                        <span class="req" aria-hidden="true">*</span> Issue date/time
+                      </label>
+                      <div class="tasty-field__control" style="position:relative;">
+                        <span class="tasty-field__vicon" aria-hidden="true"><span class="tcon" data-g="check"></span></span>
+                        <input type="text" class="tasty-input schedule-dt-input" id="schedule-datetime"
+                               value="05 / 01 / 2026,  2:00 PM"
+                               aria-required="true" aria-label="Issue date and time">
+                        <span class="date-icon" aria-hidden="true"><span class="tcon" data-g="calendar"></span></span>
+                      </div>
+                    </div>
+                    <div class="tasty-field is-valid" style="flex:1;">
+                      <label class="tasty-field__label" for="schedule-timezone">
+                        <span class="req" aria-hidden="true">*</span> Timezone
+                      </label>
+                      <div class="tasty-field__control">
+                        <span class="tasty-field__vicon" aria-hidden="true"><span class="tcon" data-g="check"></span></span>
+                        <select class="tasty-input schedule-tz-select" id="schedule-timezone" aria-required="true">
+                          <option value="CST">CST</option>
+                          <option value="EST">EST</option>
+                          <option value="PST">PST</option>
+                          <option value="MST">MST</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <p class="send-continue-note">
+                Selecting <strong>Continue</strong> sends the email notification(s).
+              </p>
+
+            </div><!-- /body -->
+
+            <div class="tasty-input-container__footer create-form-footer">
+              <div class="form-footer-btns">
+                <button class="tasty-btn is-success" id="btn-continue"
+                  onclick="completeSend()">Continue</button>
+              </div>
+              <p class="req-note">
+                <span class="req" aria-hidden="true">*</span> All items with a red asterisk are required.
+              </p>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ═══════════════════════════════════════════════════════════
+           SCREEN 4: Coupon Code Generated — Confirmation
+      ═══════════════════════════════════════════════════════════ -->
+      <section id="screen-create-03" class="screen">
+
+        <div class="page-content">
+          <div class="tasty-input-container confirm-container">
+
+            <div class="tasty-input-container__header confirm-header">
+              <h2 style="margin:0; font-size:16px; text-align:center;">Coupon code generated</h2>
+            </div>
+
+            <div class="tasty-input-container__body confirm-body">
+
+              <h3 class="confirm-summary-heading">Summary</h3>
+
+              <div class="confirm-summary-row">
+                <div class="confirm-meta">
+                  <strong class="confirm-name" id="confirm-name"></strong>
+                  <span class="confirm-expires-line">Expires <strong id="confirm-expires-date"></strong></span>
+                  <span class="confirm-applies-tag" id="confirm-applies"></span>
+                </div>
+                <div class="confirm-stats">
+                  <div class="confirm-stat">
+                    <span class="confirm-stat__num" id="confirm-per-learner-num">1</span>
+                    <span class="confirm-stat__label">use per learner</span>
+                  </div>
+                  <div class="confirm-stat">
+                    <span class="confirm-stat__num" id="confirm-total-num">100</span>
+                    <span class="confirm-stat__label">total uses</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="confirm-copy-area">
+                <p class="confirm-share-note">Share this code with learners to track redemptions.</p>
+                <button class="tasty-btn is-ghost copy-code-btn" onclick="copyCode()">
+                  <span class="tcon" data-g="copy" aria-hidden="true"></span> Copy code
+                </button>
+              </div>
+
+            </div><!-- /body -->
+
+            <div class="tasty-input-container__footer confirm-footer">
+              <div class="form-footer-btns">
+                <button class="tasty-btn is-ghost" onclick="doneCreate()">Done</button>
+                <button class="tasty-btn is-success" onclick="sendToLearners()">Send to learner(s)</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+
+      <div data-component="page-footer-mount"></div>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       REVOKE MODAL
+  ═══════════════════════════════════════════════════════════════ -->
+  <div class="tasty-modal-overlay" id="revoke-overlay" style="display:none;"
+       onclick="if(event.target===this)closeRevokeModal()">
+    <div class="tasty-modal revoke-modal" role="dialog" aria-modal="true" aria-labelledby="revoke-title">
+      <div class="tasty-modal__head">
+        <div class="revoke-modal-title-row">
+          <span class="tcon" data-g="warning" style="color:var(--context-bold);"></span>
+          <span class="tasty-modal__title" id="revoke-title">Revoke coupon code</span>
+        </div>
+        <button class="tasty-modal__x" onclick="closeRevokeModal()" aria-label="Close">&times;</button>
+      </div>
+      <div class="tasty-modal__body revoke-modal-body">
+        <p class="revoke-confirm-line">Revoke <strong id="revoke-code-id">SUMMER26</strong>?</p>
+        <p class="revoke-confirm-line">It will stop working immediately for any learner who tries to redeem it.</p>
+        <p class="revoke-undo-note">This cannot be undone.</p>
+      </div>
+      <div class="tasty-modal__foot revoke-modal-foot">
+        <button class="tasty-btn is-ghost" onclick="closeRevokeModal()">Cancel</button>
+        <button class="tasty-btn is-error" onclick="confirmRevoke()">Revoke coupon code</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Dev panel: theme switcher -->
+  <div id="dev-panel">
+    <p class="dev-section-label">Theme</p>
+    <div class="dev-btn-row">
+      <button class="dev-btn active" data-theme="default">Default</button>
+      <button class="dev-btn" data-theme="light">Light</button>
+      <button class="dev-btn" data-theme="white">White</button>
+      <button class="dev-btn" data-theme="dark">Dark</button>
+      <button class="dev-btn" data-theme="contrast">Contrast</button>
+    </div>
+  </div>
+
+  <!-- Toast mount -->
+  <div id="toast-mount" class="toast-stack"></div>
+
+  <script src="assets/tasty/manifest.js"></script>
+  <script src="scripts/tasty-icons.js"></script>
+  <script src="scripts/tasty-interactions.js"></script>
+  <script src="scripts/components.js"></script>
+  <script src="scripts/app.js"></script>
+</body>
+</html>

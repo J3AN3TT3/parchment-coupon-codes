@@ -1,0 +1,60 @@
+/* ════════════════════════════════════════════════════════════════════
+   TASTY ICONS — vendored from @parchment/tastysoft packages/Icons/svgs
+   ════════════════════════════════════════════════════════════════════
+   Two delivery modes:
+
+   1. .tcon — MONOCHROME line icons (the bare-number "Icon" family).
+      Rendered as a CSS mask so the glyph inherits the current text color
+      via `background: currentColor`. This means hover/active/disabled
+      states recolor automatically (just change `color`), exactly like
+      Tasty's <Icon> which paints with the theme font color.
+
+        <span class="tcon" style="--tcon:url(assets/tasty/icons/3p-check.svg)"></span>
+      or via the JS helper:  el.innerHTML = tastyIcon('check')
+
+   2. .tillus — FULL-COLOR graphics + illustrations (IG-/VG- families,
+      e.g. empty states, Parchie, brand logos). Rendered as <img>; colors
+      are baked into the SVG so they are NOT recolored.
+
+        <img class="tillus" src="assets/tasty/illustrations/VG-6c-de-no-learners.svg" alt="">
+      or:  el.innerHTML = tastyIllus('de-no-learners', { size: 160 })
+
+   No external icon font: every glyph is a Tasty SVG via tastyIcon()/tastyIllus()
+   (manifest.js data URIs). The skill is fully self-contained — no CDN, works offline.
+   ════════════════════════════════════════════════════════════════════ */
+
+.tcon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  flex: none;
+  vertical-align: -0.125em;            /* baseline-align with text (Tasty contextType="text") */
+  background-color: currentColor;       /* recolor → inherits theme text/action color */
+  -webkit-mask: var(--tcon) no-repeat center / contain;
+          mask: var(--tcon) no-repeat center / contain;
+}
+
+/* Centered variant (Tasty contextType="image") — no baseline nudge. */
+.tcon--image { vertical-align: middle; }
+
+/* .ticon — the <img> path used only for FULL-COLOR families (graphic/vector),
+   whose colors are baked in. Monochrome 'icon' slugs render via .tcon (mask,
+   recolorable) above — masks work on file:// now that SVGs are inline data URIs. */
+.ticon { display: inline-block; vertical-align: middle; }
+
+/* Full-color graphic / illustration. Width drives height (intrinsic ratio). */
+.tillus {
+  display: inline-block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  vertical-align: middle;
+}
+
+/* Convenience size modifiers (icons size off font-size; illustrations off width). */
+.tcon.is-sm   { font-size: 14px; }
+.tcon.is-md   { font-size: 18px; }
+.tcon.is-lg   { font-size: 24px; }
+.tillus.is-sm { width: 80px; }
+.tillus.is-md { width: 140px; }
+.tillus.is-lg { width: 220px; }

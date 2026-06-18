@@ -1,0 +1,595 @@
+/* ════════════════════════════════════════════════════════════════════
+   TASTY DESIGN SYSTEM — Primitives + Semantic Tokens
+   ════════════════════════════════════════════════════════════════════
+
+   SOURCE OF TRUTH: @parchment/tastysoft v5.56.1
+     · Primitives    → packages/Colors/src/colors.ts
+     · Semantic      → packages/ThemeProvider/src/themes/parchment/*
+                       (default · light · white · dark · contrast,
+                        + colorContext · status · validation · tooltip)
+   This file mirrors those theme objects 1:1 (verified June 2026 against
+   the monorepo). The --c-* alias layer (§3) is the prototype's own
+   contract that app.css / chrome.css read — it inherits whatever the
+   active theme sets in §2/§4.
+
+   Themes (<html data-theme="…">):
+     default   → Admin / Counselor          WCAG AA   (shipped)
+     light     → Learner Experience UI      WCAG AA   (shipped)
+     white     → White-surface variant      WCAG AA   (shipped)
+     dark      → New product surfaces        WCAG AA   (isEnabled:false upstream)
+     contrast  → Universal high-contrast     WCAG AAA  (isEnabled:false upstream)
+
+   STRUCTURE:
+     §1 Primitive palette  — constant, never overridden by theme
+     §2 Semantic tokens    — Default (Admin) theme; mirrors default.ts
+     §3 --c-* aliases      — what component CSS reads
+     §4 Theme overrides    — light / white / dark / contrast
+     §5 Non-color tokens   — spacing / type / radius / shadow (OUT OF SCOPE
+                             for the alignment pass; left as authored)
+   ════════════════════════════════════════════════════════════════════ */
+
+@font-face {
+  font-family: "Open Sans";
+  font-weight: 300 800;
+  font-style: normal;
+  font-display: swap;
+  src: url("../fonts/OpenSans-Variable.ttf") format("truetype-variations"),
+       url("../fonts/OpenSans-Regular.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Open Sans";
+  font-weight: 300 800;
+  font-style: italic;
+  font-display: swap;
+  src: url("../fonts/OpenSans-Italic-Variable.ttf") format("truetype-variations");
+}
+@font-face {
+  font-family: "Open Sans";
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+  src: url("../fonts/OpenSans-SemiBold.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Open Sans";
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+  src: url("../fonts/OpenSans-Bold.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Open Sans";
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+  src: url("../fonts/OpenSans-ExtraBold.ttf") format("truetype");
+}
+
+
+:root {
+  /* ════════════════════════════════════════════════════════════════
+     §1 PRIMITIVE PALETTE — colors.ts · never overridden by theme
+     ════════════════════════════════════════════════════════════════ */
+
+  /* Grayscale */
+  --black:        #000000;  --instBlack:  #0E1721;  --codGray:    #121212;
+  --voidBlack:    #222222;  --mineShaft:  #333333;  --emperor:    #555555;
+  --boulder:      #777777;  --dustyGray:  #999999;  --alto:       #CFCFCF;
+  --mercury:      #E6E6E6;  --wildSand:   #F4F4F4;  --alabaster:  #F9F9F9;
+  --fog:          #FCFCFC;  --white:      #FFFFFF;
+
+  /* Teals */
+  --tarawera:     #09414D;  --atoll:       #095F70;  --blueLagoon: #067A91;
+  --bondiBlue:    #0093B2;  --java:        #1DAFCC;  --arendtBlue: #65D0E5;
+  --frenchPass:   #B2F2FF;  --freshAir:    #D9F7FC;  --catskillWhite: #F0FCFF;
+
+  /* Yellows */
+  --yukonGold:    #745300;  --sahara:      #856803;  --pirateGold: #BD9711;
+  --fuel:         #DBAD0D;  --equator:     #FCCD28;  --peach:      #FCDD70;
+  --sunKissed:    #FFE99C;  --varden:      #FDF3CF;  --bulletin:   #FFFAEA;
+
+  /* Oranges */
+  --choco:        #622D09;  --toasted:     #90420D;  --cider:      #BB540D;
+  --oregon:       #EE6D15;  --hotCinnamon: #FC8B27;  --apricot:    #FDA85C;
+  --summer:       #FAC89B;  --siesta:      #FCE9D9;  --seashell:   #FFF5ED;
+
+  /* Reds */
+  --wine:         #4A1210;  --jam:         #701C1A;  --totemPole:  #91060A;
+  --cherry:       #B51A14;  --thunderBird: #CC1D22;  --popsicle:   #ED8084;
+  --sundown:      #FFB2B5;  --blush:       #FCD7D7;  --fairPink:   #FFEDED;
+
+  /* Blues */
+  --deepSpace:    #002A42;  --astronaut:   #023B5C;  --tealBlue:   #094A70;
+  --veniceBlue:   #065E91;  --deepCerulean:#006AA8;  --instBlue:   #4279B6;
+  --curiousBlue:  #1D8CCC;  --turquoiseBlue:#65B6E6; --anakiwa:    #B2E3FF;
+  --pillow:       #E0F4FF;
+
+  /* Greens */
+  --pine:         #174103;  --basil:       #226103;  --limeade:    #2D8005;
+  --olive:        #3FA110;  --apple:       #6DBE45;  --leaf:       #81D955;
+  --conifer:      #A9F086;  --mint:        #DAF7CB;  --willowBrook:#F0FCEB;
+
+
+  /* ════════════════════════════════════════════════════════════════
+     §2 SEMANTIC TOKENS — Default (Admin / Counselor) theme
+     Mirrors parchment/default.ts. Themes in §4 override these;
+     the --c-* aliases in §3 inherit automatically.
+     ════════════════════════════════════════════════════════════════ */
+
+  /* Surfaces — whiteSpace ladder */
+  --background:            var(--white);              /* theme.background */
+  --white-space-base:      var(--white);              /* #FFFFFF */
+  --white-space-z-index1:  var(--fog);                /* #FCFCFC */
+  --white-space-z-index2:  var(--alabaster);          /* #F9F9F9 */
+  --white-space-z-index3:  var(--wildSand);           /* #F4F4F4 */
+  --white-space-z-index4:  var(--mercury);            /* #E6E6E6 */
+
+  /* Text — fontColors.body */
+  --body-font-base:        var(--mineShaft);          /* #333333 */
+  --body-font-strong:      var(--voidBlack);          /* #222222 */
+  --body-font-x-strong:    var(--codGray);            /* #121212 */
+  --body-font-weak:        var(--emperor);            /* #555555 */
+  --body-font-highlight:   var(--mineShaft);          /* #333333 */
+  --body-font-disabled:    var(--emperor);            /* #555555 — official body.disabled */
+  --body-font-subtle:      var(--boulder);            /* #777777 — prototype extension (lighter muted UI text) */
+
+  /* Border */
+  --border-color:          var(--alto);               /* #CFCFCF */
+
+  /* Action — defaultTheme.action */
+  --action-default:        var(--deepCerulean);       /* #006AA8 */
+  --action-strong:         var(--deepCerulean);       /* #006AA8 — official strong = deepCerulean */
+  --action-primary:        var(--basil);              /* #226103 — green "primary" buttons */
+  --action-active:         var(--tealBlue);           /* #094A70 — pressed/active */
+  --action-hover-default:  var(--astronaut);          /* prototype extension — solid chrome hover (legacy; persona pill now uses the hover-primary gradient) */
+  /* Gradient hovers per colorContext — Tasty buttons use these on :hover */
+  --action-hover-primary:  linear-gradient(var(--deepCerulean), var(--astronaut));
+  --action-hover-success:  linear-gradient(var(--limeade), var(--pine));
+  --action-hover-warning:  linear-gradient(var(--cider), var(--choco));
+  --action-hover-error:    linear-gradient(var(--cherry), var(--jam));
+  --action-hover-bold:     linear-gradient(var(--emperor), var(--codGray));
+
+  /* colorContext — context palette (colorContext.ts). Drives StatusTag,
+     Banner, and Button context variants. NOTE: brand here = atoll (teal),
+     intentionally distinct from action.default (blue). */
+  --context-white:             var(--white);          /* #FFFFFF */
+  --context-neutral:           var(--white);          /* #FFFFFF */
+  --context-brand:             var(--atoll);          /* #095F70 */
+  --context-success:           var(--basil);          /* #226103 */
+  --context-config:            var(--deepCerulean);   /* #006AA8 */
+  --context-warning:           var(--cider);          /* #BB540D */
+  --context-error:             var(--cherry);         /* #B51A14 */
+  --context-bold:              var(--emperor);        /* #555555 */
+  --context-depressed-success: var(--pine);           /* #174103 */
+  --context-depressed-warning: var(--toasted);        /* #90420D */
+  --context-depressed-error:   var(--totemPole);      /* #91060A */
+  --context-depressed-bold:    var(--mineShaft);      /* #333333 */
+
+  /* Status (badge) tokens — status.ts. StatusTag context → token map:
+       success → base2 / foreground2     warning → base5 / foreground5
+       error   → base3 / foreground3     primary → base1 / foreground1
+       note    → base4 / foreground4 */
+  --status-base-1:         var(--pillow);             /* #E0F4FF  primary/info bg */
+  --status-base-2:         var(--willowBrook);        /* #F0FCEB  success bg */
+  --status-base-3:         var(--fairPink);           /* #FFEDED  error bg */
+  --status-base-4:         var(--bulletin);           /* #FFFAEA  note bg (yellow) */
+  --status-base-5:         var(--seashell);           /* #FFF5ED  warning bg (orange) */
+  --status-base-6:         var(--catskillWhite);      /* #F0FCFF  brand bg (teal) */
+  --status-foreground-1:   var(--deepCerulean);       /* #006AA8 */
+  --status-foreground-2:   var(--basil);              /* #226103 */
+  --status-foreground-3:   var(--cherry);             /* #B51A14 */
+  --status-foreground-4:   var(--sahara);             /* #856803 */
+  --status-foreground-5:   var(--toasted);            /* #90420D */
+  --status-foreground-6:   var(--blueLagoon);         /* #067A91 */
+
+  /* Tooltip — tooltip.ts */
+  --tooltip-base:          var(--codGray);            /* #121212 */
+  --tooltip-header:        var(--mineShaft);          /* #333333 */
+  --tooltip-text:          var(--mercury);            /* #E6E6E6 */
+
+  /* Validation — validation.ts */
+  --validation-base-focus: var(--catskillWhite);      /* #F0FCFF */
+  --validation-base-valid: var(--willowBrook);        /* #F0FCEB */
+  --validation-base-error: var(--fairPink);           /* #FFEDED */
+
+  /* Chrome (PageHeader / PageFooter — brand0-3 + fontColors.brand).
+     These internal ph/nav tokens feed the --c-* chrome aliases. */
+  --ph-brand0:             var(--veniceBlue);         /* #065E91 — header bg (brand0) */
+  --ph-brand1:             var(--deepCerulean);       /* #006AA8 — persona pill bg (brand1) */
+  --ph-brand2:             var(--curiousBlue);        /* #1D8CCC — persona border (brand2) */
+  --ph-font-base:          var(--wildSand);           /* #F4F4F4 — persona text (fontColors.brand.base) */
+  --ph-font-strong:        var(--white);              /* #FFFFFF — persona name (fontColors.brand.strong) */
+  --ph-font-action:        var(--white);              /* #FFFFFF — lang selector (fontColors.brand.action) */
+  --ph-logo-main:          var(--white);              /* fontColors.brand.logoMain */
+  --ph-logo-accent:        var(--white);              /* fontColors.brand.logoAccent */
+
+  /* Nav-bar (tab shelf below header) — prototype construct (Tasty has no
+     dedicated nav-bar token; it derives from action + surface). Defaults
+     to the body surface so the bar matches the page, header above stays
+     the distinct brand surface. */
+  --nav-bar-bg:            var(--white-space-base);
+  --nav-bar-border:        var(--border-color);
+  --nav-inactive:          var(--action-default);
+  --nav-active:            var(--action-strong);
+
+  /* Focus + overlay */
+  --focus-ring:            var(--instBlue);           /* #4279B6 (focusRing) */
+  --box-shadow-color:      rgba(34, 34, 34, 0.5);
+
+
+  /* ════════════════════════════════════════════════════════════════
+     §3 --c-* ALIASES — what component CSS reads. Resolve to whatever
+     the active theme has set in §2/§4.
+     ════════════════════════════════════════════════════════════════ */
+
+  /* Body surfaces */
+  --c-page:           var(--white-space-z-index3);
+  --c-surface:        var(--white-space-base);
+  --c-surface-subtle: var(--white-space-z-index2);
+  --c-surface-z1:     var(--white-space-z-index3);
+  --c-surface-raised: var(--white-space-base);
+  --c-surface-dim:    var(--white-space-z-index2);
+  --c-border:         var(--border-color);
+  --c-border-strong:  var(--dustyGray);
+
+  /* Text */
+  --c-text:           var(--body-font-base);
+  --c-text-strong:    var(--body-font-x-strong);
+  --c-text-muted:     var(--body-font-weak);
+  --c-text-subtle:    var(--body-font-subtle);
+  --c-text-base:      var(--body-font-base);
+
+  /* Brand / action */
+  --c-brand:          var(--action-default);
+  --c-brand-dark:     var(--action-active);    /* tealBlue — darker/pressed brand */
+  --c-brand-bg:       var(--status-base-1);
+  --c-brand-border:   var(--anakiwa);
+  --c-action:         var(--action-default);
+  --c-action-primary: var(--action-primary);   /* green primary */
+  --c-action-active:  var(--action-active);
+  /* Gradient hover aliases (buttons) */
+  --c-hover-primary:  var(--action-hover-primary);
+  --c-hover-success:  var(--action-hover-success);
+  --c-hover-warning:  var(--action-hover-warning);
+  --c-hover-error:    var(--action-hover-error);
+  --c-hover-bold:     var(--action-hover-bold);
+
+  /* Status — alias → official StatusTag context mapping */
+  --c-success:        var(--context-success);
+  --c-success-bg:     var(--status-base-2);     /* willowBrook */
+  --c-success-text:   var(--status-foreground-2);
+  --c-success-border: var(--leaf);
+  --c-success-on-dark: var(--conifer);
+  --c-warning:        var(--context-warning);   /* cider (orange) */
+  --c-warning-bg:     var(--status-base-5);     /* seashell — official warning bg */
+  --c-warning-text:   var(--status-foreground-5); /* toasted */
+  --c-warning-border: var(--apricot);
+  --c-note:           var(--status-foreground-4); /* Tasty "note" context (yellow) */
+  --c-note-bg:        var(--status-base-4);      /* bulletin */
+  --c-note-text:      var(--status-foreground-4);/* sahara */
+  --c-note-border:    var(--fuel);
+  --c-danger:         var(--context-error);
+  --c-danger-bg:      var(--status-base-3);      /* fairPink */
+  --c-danger-text:    var(--status-foreground-3);/* cherry */
+  --c-danger-border:  var(--popsicle);
+  --c-info-bg:        var(--status-base-1);      /* pillow */
+  --c-info-text:      var(--status-foreground-1);/* deepCerulean */
+  --c-context-brand:  var(--context-brand);      /* atoll teal */
+
+  /* Tooltip */
+  --c-tooltip-bg:     var(--tooltip-base);
+  --c-tooltip-header: var(--tooltip-header);
+  --c-tooltip-text:   var(--tooltip-text);
+
+  /* Chrome */
+  --c-page-header:        var(--ph-brand0);
+  --c-page-header-fg:     var(--ph-font-strong);
+  --c-page-footer:        var(--ph-brand0);
+  --c-page-footer-fg:     var(--ph-font-strong);
+
+  /* Nav-bar (tab shelf) */
+  --c-nav-bar:            var(--nav-bar-bg);
+  --c-nav-bar-border:     var(--nav-bar-border);
+  --c-nav-inactive:       var(--nav-inactive);
+  --c-nav-active:         var(--nav-active);
+
+  /* Persona pill (inside header) */
+  --c-persona-bg:         var(--ph-brand1);
+  --c-persona-bg-hover:   var(--action-hover-primary); /* PersonaMenuHeader hover = primary gradient */
+  --c-persona-border:     var(--ph-brand2);
+  --c-persona-fg:         var(--ph-font-base);
+  --c-persona-name-fg:    var(--ph-font-strong);
+
+  /* Interaction */
+  --c-overlay:    var(--box-shadow-color);
+  --c-row-active: var(--catskillWhite);
+
+
+  /* ════════════════════════════════════════════════════════════════
+     §5 NON-COLOR TOKENS — spacing / type / radius / shadow / motion.
+     OUT OF SCOPE for the color-alignment pass; preserved as authored.
+     ════════════════════════════════════════════════════════════════ */
+
+  /* Shadows */
+  --shadow-card: 0 1px 2px rgba(0,0,0,0.06), 0 0 0 1px rgba(0,0,0,0.04);
+  --shadow-pop:  0 8px 24px rgba(0,0,0,0.15);
+
+  /* Transitions */
+  --t-quick:  150ms ease-out;
+  --t-medium: 220ms ease-out;
+
+  /* Font family alias */
+  --font-family: var(--font-family-base);
+
+  /* Spacing — "Friends" model (same all themes) */
+  --space-xs:    0.25rem;  --space-sm:    0.5rem;   --space-md:    1rem;
+  --space-lg:    1.5rem;   --space-xl:    2rem;     --space-xxl:   2.5rem;
+  --space-jumbo: 3.125rem; --space-xJumbo: 5rem;
+
+  /* Typography — px (Tasty Globals FONT_SIZES). NOTE: Tasty's rem scale assumes
+     a 10px root; this shell runs at the default 16px root (its spacing tokens
+     are calibrated for 16px), so font sizes are authored in px to stay correct
+     rather than rendering 1.6× too large. */
+  --font-base-size:     16px;
+  --font-xSmall:  11px;    --font-small:  13px;     --font-medium: 16px;
+  --font-large:   20px;    --font-xLarge: 25px;     --font-xxLarge: 30px;
+  --font-weight-regular:  400;
+  --font-weight-semibold: 600;
+  --font-weight-bold:     700;
+  --font-family-base: "Open Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-family-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  /* Corner radii */
+  --radius-sm:   2px;
+  --radius-md:   4px;
+  --radius-lg:   8px;
+  --radius-pill: 9999px;
+}
+
+
+/* ════════════════════════════════════════════════════════════════════
+   §4 THEME OVERRIDES
+   Each theme replaces only the semantic tokens it changes; the --c-*
+   aliases inherit. Surfaces, text, action, status, chrome per the
+   matching parchment/*.ts file.
+   ════════════════════════════════════════════════════════════════════ */
+
+
+/* ──────────────────────────────────────────────────────────────────────
+   LIGHT THEME — Learner Experience UI · WCAG AA · light.ts
+   Surfaces = same white ladder as default; only chrome differs
+   (wildSand header, dark text, instBlue→bondiBlue logo accent).
+   ────────────────────────────────────────────────────────────────────── */
+[data-theme="light"] {
+  /* Surfaces — identical to default (white base) */
+  --white-space-base:     var(--white);              /* #FFFFFF page */
+  --white-space-z-index1: var(--fog);                /* #FCFCFC */
+  --white-space-z-index2: var(--alabaster);          /* #F9F9F9 */
+  --white-space-z-index3: var(--wildSand);           /* #F4F4F4 */
+  --white-space-z-index4: var(--mercury);            /* #E6E6E6 */
+
+  /* Action — light.ts sets active = deepCerulean (not tealBlue) */
+  --action-active:        var(--deepCerulean);       /* #006AA8 */
+
+  /* Chrome — wildSand header with dark text */
+  --ph-brand0:            var(--wildSand);           /* #F4F4F4 header */
+  --ph-brand1:            var(--white);              /* #FFFFFF persona bg */
+  --ph-brand2:            var(--wildSand);           /* #F4F4F4 persona border */
+  --ph-font-base:         var(--emperor);            /* #555555 */
+  --ph-font-strong:       var(--mineShaft);          /* #333333 persona name */
+  --ph-font-action:       var(--deepCerulean);       /* #006AA8 language */
+  --ph-logo-main:         var(--emperor);            /* #555555 */
+  --ph-logo-accent:       var(--bondiBlue);          /* #0093B2 */
+}
+
+
+/* ──────────────────────────────────────────────────────────────────────
+   WHITE THEME — White-surface variant · WCAG AA · white.ts
+   Alabaster page (recessed white card layer), pure-white header.
+   ────────────────────────────────────────────────────────────────────── */
+[data-theme="white"] {
+  /* Surfaces — alabaster base, white is the most-recessed layer */
+  --white-space-base:     var(--alabaster);          /* #F9F9F9 page */
+  --white-space-z-index1: var(--white);              /* #FFFFFF */
+  --white-space-z-index2: var(--fog);                /* #FCFCFC */
+  --white-space-z-index3: var(--wildSand);           /* #F4F4F4 */
+  --white-space-z-index4: var(--mercury);            /* #E6E6E6 */
+
+  /* Chrome — pure-white header, blueLagoon→java logo */
+  --ph-brand0:            var(--white);              /* #FFFFFF header */
+  --ph-brand1:            var(--wildSand);           /* #F4F4F4 persona bg */
+  --ph-brand2:            var(--mercury);            /* #E6E6E6 persona border */
+  --ph-font-base:         var(--emperor);            /* #555555 */
+  --ph-font-strong:       var(--mineShaft);          /* #333333 */
+  --ph-font-action:       var(--deepCerulean);       /* #006AA8 */
+  --ph-logo-main:         var(--blueLagoon);         /* #067A91 */
+  --ph-logo-accent:       var(--java);               /* #1DAFCC */
+}
+
+
+/* ──────────────────────────────────────────────────────────────────────
+   DARK THEME — New product surfaces · WCAG AA · dark.ts
+   (isEnabled:false upstream — exposed here for prototype completeness.)
+   ────────────────────────────────────────────────────────────────────── */
+[data-theme="dark"] {
+  /* Surfaces — flat ladder, page = card */
+  --background:           var(--codGray);            /* #121212 */
+  --white-space-base:     var(--codGray);            /* #121212 */
+  --white-space-z-index1: var(--black);              /* #000000 — recessed */
+  --white-space-z-index2: var(--voidBlack);          /* #222222 — elevated */
+  --white-space-z-index3: var(--mineShaft);          /* #333333 */
+  --white-space-z-index4: var(--emperor);            /* #555555 */
+
+  /* Text */
+  --body-font-base:       var(--mercury);            /* #E6E6E6 */
+  --body-font-strong:     var(--wildSand);           /* #F4F4F4 */
+  --body-font-x-strong:   var(--alabaster);          /* #F9F9F9 */
+  --body-font-weak:       var(--alto);               /* #CFCFCF */
+  --body-font-highlight:  var(--mercury);            /* #E6E6E6 */
+  --body-font-disabled:   var(--black);              /* #000000 */
+  --body-font-subtle:     var(--alto);               /* #CFCFCF */
+
+  /* Border */
+  --border-color:         var(--boulder);            /* #777777 */
+
+  /* Action — lifted brand */
+  --action-default:       var(--turquoiseBlue);      /* #65B6E6 */
+  --action-strong:        var(--white);              /* #FFFFFF */
+  --action-primary:       var(--apple);              /* #6DBE45 */
+  --action-active:        var(--white);              /* #FFFFFF */
+  --action-hover-default: var(--instBlue);
+  --action-hover-primary: linear-gradient(var(--anakiwa), var(--curiousBlue));
+  --action-hover-success: linear-gradient(var(--leaf), var(--olive));
+  --action-hover-warning: linear-gradient(var(--apricot), var(--oregon));
+  --action-hover-error:   linear-gradient(var(--sundown), var(--popsicle));
+  --action-hover-bold:    linear-gradient(var(--alabaster), var(--alto));
+
+  /* colorContext */
+  --context-neutral:           var(--black);         /* #000000 */
+  --context-brand:             var(--java);          /* #1DAFCC */
+  --context-success:           var(--apple);         /* #6DBE45 */
+  --context-config:            var(--turquoiseBlue); /* #65B6E6 */
+  --context-warning:           var(--hotCinnamon);   /* #FC8B27 */
+  --context-error:             var(--popsicle);      /* #ED8084 */
+  --context-bold:              var(--wildSand);       /* #F4F4F4 */
+  --context-depressed-success: var(--olive);         /* #3FA110 */
+  --context-depressed-warning: var(--oregon);        /* #EE6D15 */
+  --context-depressed-error:   var(--thunderBird);   /* #CC1D22 */
+  --context-depressed-bold:    var(--mercury);       /* #E6E6E6 */
+
+  /* Status */
+  --status-base-1:        var(--astronaut);          /* #023B5C */
+  --status-base-2:        var(--pine);               /* #174103 */
+  --status-base-3:        var(--jam);                /* #701C1A */
+  --status-base-4:        var(--yukonGold);          /* #745300 */
+  --status-base-5:        var(--toasted);            /* #90420D */
+  --status-base-6:        var(--tarawera);           /* #09414D */
+  --status-foreground-1:  var(--anakiwa);            /* #B2E3FF */
+  --status-foreground-2:  var(--mint);               /* #DAF7CB */
+  --status-foreground-3:  var(--blush);              /* #FCD7D7 */
+  --status-foreground-4:  var(--varden);             /* #FDF3CF */
+  --status-foreground-5:  var(--siesta);             /* #FCE9D9 */
+  --status-foreground-6:  var(--freshAir);           /* #D9F7FC */
+
+  /* Tooltip */
+  --tooltip-base:         var(--emperor);            /* #555555 */
+  --tooltip-header:       var(--boulder);            /* #777777 */
+  --tooltip-text:         var(--alabaster);          /* #F9F9F9 */
+
+  /* Validation — flat dark fields */
+  --validation-base-focus: var(--codGray);           /* #121212 */
+  --validation-base-valid: var(--codGray);           /* #121212 */
+  --validation-base-error: var(--codGray);           /* #121212 */
+
+  /* Chrome — mineShaft header */
+  --ph-brand0:            var(--mineShaft);          /* #333333 */
+  --ph-brand1:            var(--codGray);            /* #121212 persona bg */
+  --ph-brand2:            var(--emperor);            /* #555555 persona border */
+  --ph-font-base:         var(--alto);               /* #CFCFCF */
+  --ph-font-strong:       var(--white);              /* #FFFFFF */
+  --ph-font-action:       var(--white);
+  --ph-logo-main:         var(--white);
+  --ph-logo-accent:       var(--white);
+
+  /* Nav-bar — inherits codGray body bg; header above stays mineShaft */
+  --nav-bar-border:       var(--boulder);            /* #777777 */
+  --nav-inactive:         var(--alto);               /* #CFCFCF */
+  --nav-active:           var(--turquoiseBlue);      /* #65B6E6 */
+
+  /* Focus + alias overrides whose primitive paths need redirecting */
+  --focus-ring:           var(--pillow);             /* #E0F4FF (dark.ts focusRing) */
+  --c-brand-bg:           var(--astronaut);          /* #023B5C */
+  --c-brand-border:       var(--turquoiseBlue);
+  --c-row-active:         var(--voidBlack);          /* #222222 */
+  --c-info-text:          var(--anakiwa);
+
+  /* Shadows */
+  --shadow-card: 0 4px 10px rgba(85, 85, 85, 0.35);
+  --shadow-pop:  0 8px 24px rgba(0,0,0,0.55);
+}
+
+
+/* ──────────────────────────────────────────────────────────────────────
+   CONTRAST THEME — Universal high-contrast · WCAG AAA · contrast.ts
+   (isEnabled:false upstream.) White body, deepened text + action.
+   NOTE: contrast.ts uses focusRing = deepCerulean. (A prior prototype
+   build used a high-vis yellow #FFFF00 ring + white nav shelf for AAA;
+   those were custom and are NOT in the upstream theme — restore them
+   here if the team prefers that AAA treatment.)
+   ────────────────────────────────────────────────────────────────────── */
+[data-theme="contrast"] {
+  /* Surfaces — same white ladder as default */
+  --background:           var(--white);              /* #FFFFFF */
+
+  /* Text — pushed darker for AAA contrast */
+  --body-font-base:       var(--mineShaft);          /* #333333 */
+  --body-font-strong:     var(--codGray);            /* #121212 */
+  --body-font-x-strong:   var(--black);              /* #000000 */
+  --body-font-weak:       var(--mineShaft);          /* #333333 — darker than default's #555 */
+  --body-font-disabled:   var(--emperor);            /* #555555 */
+  --body-font-subtle:     var(--mineShaft);          /* #333333 */
+
+  /* Action — deeper blue for AAA contrast on white */
+  --action-default:       var(--astronaut);          /* #023B5C */
+  --action-strong:        var(--astronaut);          /* #023B5C */
+  --action-primary:       var(--pine);               /* #174103 */
+  --action-active:        var(--deepSpace);          /* #002A42 */
+  --action-hover-default: var(--deepSpace);
+  --action-hover-primary: linear-gradient(var(--veniceBlue), var(--astronaut));
+  --action-hover-success: linear-gradient(var(--basil), var(--pine));
+  --action-hover-warning: linear-gradient(var(--cider), var(--toasted));
+  --action-hover-error:   linear-gradient(var(--totemPole), var(--jam));
+  --action-hover-bold:    linear-gradient(var(--mineShaft), var(--codGray));
+
+  /* colorContext */
+  --context-brand:             var(--atoll);         /* #095F70 */
+  --context-success:           var(--basil);         /* #226103 */
+  --context-config:            var(--astronaut);     /* #023B5C */
+  --context-warning:           var(--toasted);       /* #90420D */
+  --context-error:             var(--jam);           /* #701C1A */
+  --context-bold:              var(--codGray);       /* #121212 */
+  --context-depressed-success: var(--pine);          /* #174103 */
+  --context-depressed-warning: var(--choco);         /* #622D09 */
+  --context-depressed-error:   var(--wine);          /* #4A1210 */
+  --context-depressed-bold:    var(--codGray);       /* #121212 */
+
+  /* Status */
+  --status-base-1:        var(--pillow);             /* #E0F4FF */
+  --status-base-2:        var(--mint);               /* #DAF7CB */
+  --status-base-3:        var(--blush);              /* #FCD7D7 */
+  --status-base-4:        var(--bulletin);           /* #FFFAEA */
+  --status-base-5:        var(--siesta);             /* #FCE9D9 */
+  --status-base-6:        var(--catskillWhite);      /* #F0FCFF */
+  --status-foreground-1:  var(--astronaut);          /* #023B5C */
+  --status-foreground-2:  var(--pine);               /* #174103 */
+  --status-foreground-3:  var(--jam);                /* #701C1A */
+  --status-foreground-4:  var(--mineShaft);          /* #333333 */
+  --status-foreground-5:  var(--toasted);            /* #90420D */
+  --status-foreground-6:  var(--tarawera);           /* #09414D */
+
+  /* Tooltip */
+  --tooltip-base:         var(--black);              /* #000000 */
+  --tooltip-header:       var(--mineShaft);          /* #333333 */
+  --tooltip-text:         var(--alabaster);          /* #F9F9F9 */
+
+  /* Chrome — mineShaft header (like dark) */
+  --ph-brand0:            var(--mineShaft);          /* #333333 */
+  --ph-brand1:            var(--codGray);            /* #121212 persona bg */
+  --ph-brand2:            var(--emperor);            /* #555555 persona border */
+  --ph-font-base:         var(--white);              /* #FFFFFF */
+  --ph-font-strong:       var(--white);
+  --ph-font-action:       var(--white);
+  --ph-logo-main:         var(--white);
+  --ph-logo-accent:       var(--white);
+
+  /* Nav-bar */
+  --nav-inactive:         var(--mineShaft);
+  --nav-active:           var(--tealBlue);           /* inListActive */
+
+  /* Focus — upstream contrast.ts uses deepCerulean */
+  --focus-ring:           var(--deepCerulean);       /* #006AA8 */
+  --box-shadow-color:     rgba(0, 0, 0, 0.6);
+
+  --c-brand-bg:           var(--pillow);
+  --c-info-text:          var(--astronaut);
+}
