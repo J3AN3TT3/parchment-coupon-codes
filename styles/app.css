@@ -144,9 +144,10 @@ body { margin: 0; font-family: var(--font-family-base); color: var(--c-text); ba
   gap: var(--space-sm);
   flex-wrap: wrap;
 }
+/* SectionHeaderTitle size-large: 80×80 illustration */
 .coupon-illus-wrap {
-  width: 68px;
-  height: 68px;
+  width: 80px;
+  height: 80px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -777,6 +778,40 @@ body { margin: 0; font-family: var(--font-family-base); color: var(--c-text); ba
 }
 .copy-code-btn {
   white-space: nowrap;
+}
+
+/* ── Options menu item icon alignment ────────────────────────── */
+.tasty-menu__item .tcon {
+  margin-right: 6px;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+
+/* ── Phase 1 — MVP surfaced action buttons ────────────────────── */
+.p1-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  justify-content: flex-end;
+}
+.p1-action-btn {
+  width: 32px;
+  height: 32px;
+  min-width: unset;
+  padding: 0 !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+}
+/* Expire button: danger color */
+.p1-expire-btn {
+  color: var(--context-error) !important;
+  border-color: var(--context-error) !important;
+}
+.p1-expire-btn:hover {
+  background: var(--context-error) !important;
+  color: #fff !important;
 }
 
 /* ── Schedule fields (revealed by Schedule Send) ──────────────── */
